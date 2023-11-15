@@ -61,6 +61,37 @@
             margin: 10px;
             display: block;
         }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            background-color: #1E1E1E;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #2E2E2E;
+        }
+
+        th {
+            background-color: #2E2E2E;
+            color: #00FF00;
+        }
+
+        a.tutorial-link {
+            color: #00FF00;
+            text-decoration: none;
+        }
+
+        a.tutorial-link:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 
@@ -74,34 +105,40 @@
         <a href="https://gotr00t0day.github.io/tutorials.html">Tutorials</a>
         <a href="#scripts">Ownage</a>
     </div>
-    <h1>My Hacker Tutorials</h1>
+    <div id="content">
+        <h1>Welcome to gotr00t</h1>
+        <p>Enter the shadows where code is a weapon, exploits are currency, and every hack leaves a digital scar.</p>
+        <p>Uncover the darkest exploits, share covert scripts, and wield powerful tools in the pursuit of knowledge and chaos.</p>
+        <p>The journey into the abyss awaits. Welcome to gotr00t, where shadows dance and codes whisper.</p>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Tutorial Name</th>
-                <th>Description</th>
-                <th>Link</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Tutorial 1 -->
-            <tr>
-                <td>Tutorial 1</td>
-                <td>A brief description of Tutorial 1.</td>
-                <td><a href="https://tutorial1-link.com" target="_blank">View Tutorial</a></td>
-            </tr>
+        <h2>My Hacker Tutorials</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tutorial Name</th>
+                    <th>Description</th>
+                    <th>Link</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Tutorial 1 -->
+                <tr>
+                    <td>Tutorial 1</td>
+                    <td>A brief description of Tutorial 1.</td>
+                    <td><a class="tutorial-link" href="https://tutorial1-link.com" target="_blank">View Tutorial</a></td>
+                </tr>
 
-            <!-- Tutorial 2 -->
-            <tr>
-                <td>Tutorial 2</td>
-                <td>Description of Tutorial 2.</td>
-                <td><a href="https://tutorial2-link.com" target="_blank">View Tutorial</a></td>
-            </tr>
+                <!-- Tutorial 2 -->
+                <tr>
+                    <td>Tutorial 2</td>
+                    <td>Description of Tutorial 2.</td>
+                    <td><a class="tutorial-link" href="https://tutorial2-link.com" target="_blank">View Tutorial</a></td>
+                </tr>
 
-            <!-- Add more tutorials as needed -->
-        </tbody>
-    </table>
+                <!-- Add more tutorials as needed -->
+            </tbody>
+        </table>
+    </div>
     <marquee behavior="scroll" direction="left">This is our world now... the world of the electron and the switch</marquee>
     <div id="social">
         <a href="https://www.instagram.com/gotr00t0day" target="_blank">Instagram</a>
@@ -111,3 +148,4 @@
 </body>
 
 </html>
+
