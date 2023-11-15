@@ -1,54 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Hacker Tutorials</title>
+    <title>gotr00t - The Hacker Cave</title>
     <style>
         body {
-            font-family: 'Courier New', Courier, monospace;
             background-color: black;
             color: white;
-            margin: 20px;
-        }
-
-        h1 {
-            color: #00FF00;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 0;
             overflow: hidden;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            background-color: #1E1E1E;
         }
 
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #2E2E2E;
+        #menu {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 150px;
+            background-color: black;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
         }
 
-        th {
-            background-color: #2E2E2E;
-            color: #00FF00;
+        #content {
+            margin-left: 170px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        #logo {
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         a {
-            color: #00FF00;
+            color: white;
             text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
         }
 
-        a:hover {
-            text-decoration: underline;
+        h1,
+        h2 {
+            color: #00FF00;
+        }
+
+        #social {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            text-align: right;
+        }
+
+        #social a {
+            margin: 10px;
+            display: block;
         }
     </style>
 </head>
-<body>
 
+<body>
+    <div id="menu">
+        <div id="logo">
+            <img src="gotr00t_wallpaper.png" alt="gotr00t Logo" width="100">
+        </div>
+        <a href="#exploits">PoC</a>
+        <a href="https://gotr00t0day.github.io/projects.html">Projects</a>
+        <a href="https://gotr00t0day.github.io/tutorials.html">Tutorials</a>
+        <a href="#scripts">Ownage</a>
+    </div>
     <h1>My Hacker Tutorials</h1>
 
     <table>
@@ -77,6 +102,12 @@
             <!-- Add more tutorials as needed -->
         </tbody>
     </table>
-
+    <marquee behavior="scroll" direction="left">This is our world now... the world of the electron and the switch</marquee>
+    <div id="social">
+        <a href="https://www.instagram.com/gotr00t0day" target="_blank">Instagram</a>
+        <a href="https://twitter.com/gotr00t0day" target="_blank">Twitter</a>
+        <a href="https://github.com/gotr00t0day" target="_blank">GitHub</a>
+    </div>
 </body>
+
 </html>
