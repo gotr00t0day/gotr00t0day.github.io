@@ -3,84 +3,362 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Underground Projects</title>
+    <title>Underground Arsenal - gotr00t</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Courier New', Courier, monospace;
-            background-color: black;
-            color: white;
-            margin: 20px;
+            background: linear-gradient(45deg, #000000, #0a0a0a, #111111);
+            color: #ffffff;
+            font-family: 'Share Tech Mono', monospace;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Animated binary background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.15) 1px, transparent 0);
+            background-size: 20px 20px;
+            animation: binaryFlow 10s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes binaryFlow {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(20px); }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
         }
 
         h1 {
-            color: #00FF00;
+            font-family: 'Orbitron', monospace;
+            font-size: 3.5em;
+            color: #ffffff;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            animation: glow 2s ease-in-out infinite alternate;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            background-color: #1E1E1E;
+        @keyframes glow {
+            from { text-shadow: 0 0 30px rgba(255, 255, 255, 0.8); }
+            to { text-shadow: 0 0 50px rgba(255, 255, 255, 1), 0 0 80px rgba(255, 255, 255, 0.5); }
         }
 
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #2E2E2E;
-        }
-
-        th {
-            background-color: #2E2E2E;
-            color: #00FF00;
-        }
-
-        a {
-            color: #00FF00;
+        .nav-back {
+            display: inline-block;
+            color: #ffffff;
             text-decoration: none;
+            padding: 12px 25px;
+            border: 2px solid #ffffff;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            background: rgba(0, 0, 0, 0.8);
+            font-weight: bold;
         }
 
-        a:hover {
-            text-decoration: underline;
+        .nav-back:hover {
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+            transform: translateY(-3px);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .project-card {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #ffffff;
+            border-radius: 12px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .project-card:hover::before {
+            left: 100%;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+            border-color: #cccccc;
+        }
+
+        .project-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5em;
+            color: #ffffff;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .project-title::before {
+            content: "🔥";
+            animation: flicker 1s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        .project-description {
+            color: #cccccc;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+        }
+
+        .project-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .language-tag {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            border: 1px solid #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stars {
+            color: #ffffff;
+            font-size: 0.9em;
+        }
+
+        .project-links {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .project-link {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 1px solid #ffffff;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.9em;
+        }
+
+        .project-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .exploit-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: #ffffff;
+            color: #000;
+            padding: 5px 10px;
+            font-size: 0.7em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 0 8px 0 8px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.5; }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .project-card {
+                padding: 20px;
+            }
+            
+            .project-meta {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        .terminal-prompt {
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .terminal-prompt::before {
+            content: "";
         }
     </style>
 </head>
+
 <body>
+    <div class="header">
+        <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap;">
+            <a href="index.html" class="nav-back">🏠 Home</a>
+            <a href="poc.html" class="nav-back">⚡ PoC</a>
+            <a href="projects.html" class="nav-back" style="background: rgba(255, 255, 255, 0.2);">🔧 Projects</a>
+            <a href="contact.html" class="nav-back">📧 Contact</a>
+        </div>
+        <h1>Underground Arsenal</h1>
+        <p class="terminal-prompt">gotr00t@projects:~$ Loading weapons cache...</p>
+    </div>
 
-    <h1>My Underground Projects</h1>
+    <div class="projects-grid">
+        <!-- Spyhunt -->
+        <div class="project-card">
+            <div class="exploit-badge">RECON</div>
+            <div class="project-title">Spyhunt</div>
+            <div class="project-description">
+                Comprehensive network scanning and vulnerability assessment tool designed for security professionals and penetration testers. Features subdomain enumeration, technology detection, web crawling, API endpoint fuzzing, vulnerability scanning, and cloud security assessments. Multi-threaded with extensive automation capabilities.
+            </div>
+            <div class="project-meta">
+                <span class="language-tag">Python</span>
+                <span class="stars">⭐ 776 stars</span>
+            </div>
+            <div class="project-links">
+                <a href="https://github.com/gotr00t0day/spyhunt" target="_blank" class="project-link">🔗 Repository</a>
+            </div>
+        </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Project Name</th>
-                <th>Description</th>
-                <th>Language</th>
-                <th>GitHub Link</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Project 1 -->
-            <tr>
-                <td>Project 1</td>
-                <td>A brief description of Project 1.</td>
-                <td>JavaScript</td>
-                <td><a href="https://github.com/your-username/project1" target="_blank">GitHub</a></td>
-            </tr>
+        <!-- Gsec -->
+        <div class="project-card">
+            <div class="exploit-badge">SECURITY</div>
+            <div class="project-title">Gsec</div>
+            <div class="project-description">
+                Advanced general security framework for penetration testing and comprehensive security assessments. Includes various security testing modules for different attack vectors and vulnerability assessments.
+            </div>
+            <div class="project-meta">
+                <span class="language-tag">Python</span>
+                <span class="stars">⭐ 42 stars</span>
+            </div>
+            <div class="project-links">
+                <a href="https://github.com/gotr00t0day/gsec" target="_blank" class="project-link">🔗 Repository</a>
+            </div>
+        </div>
 
-            <!-- Project 2 -->
-            <tr>
-                <td>Project 2</td>
-                <td>Another project with its description.</td>
-                <td>Python</td>
-                <td><a href="https://github.com/your-username/project2" target="_blank">GitHub</a></td>
-            </tr>
+        <!-- exp0s3d -->
+        <div class="project-card">
+            <div class="exploit-badge">EXPLOIT</div>
+            <div class="project-title">exp0s3d</div>
+            <div class="project-description">
+                Advanced exploitation framework for discovering and exploiting security vulnerabilities. Features automated payload generation, vulnerability assessment capabilities, and exploit development tools for security researchers.
+            </div>
+            <div class="project-meta">
+                <span class="language-tag">Python</span>
+                <span class="stars">⭐ 89 stars</span>
+            </div>
+            <div class="project-links">
+                <a href="https://github.com/gotr00t0day/exp0s3d" target="_blank" class="project-link">🔗 Repository</a>
+            </div>
+        </div>
 
-            <!-- Add more projects as needed -->
-        </tbody>
-    </table>
+        <!-- forbidenpas -->
+        <div class="project-card">
+            <div class="exploit-badge">BYPASS</div>
+            <div class="project-title">forbidenpas</div>
+            <div class="project-description">
+                Specialized tool for bypassing HTTP 403 Forbidden and 401 Unauthorized responses. Automates various bypass techniques including header manipulation, path traversal, HTTP method bypasses, and payload variations to gain access to restricted content.
+            </div>
+            <div class="project-meta">
+                <span class="language-tag">Python</span>
+                <span class="stars">⭐ 156 stars</span>
+            </div>
+            <div class="project-links">
+                <a href="https://github.com/gotr00t0day/forbidenpas" target="_blank" class="project-link">🔗 Repository</a>
+            </div>
+        </div>
 
+        <!-- techackz -->
+        <div class="project-card">
+            <div class="exploit-badge">TOOLKIT</div>
+            <div class="project-title">techackz</div>
+            <div class="project-description">
+                Technical hacking toolkit with various penetration testing utilities and security assessment tools. Multi-purpose framework designed for security professionals with comprehensive attack modules and automation features.
+            </div>
+            <div class="project-meta">
+                <span class="language-tag">Python</span>
+                <span class="stars">⭐ 203 stars</span>
+            </div>
+            <div class="project-links">
+                <a href="https://github.com/gotr00t0day/techackz" target="_blank" class="project-link">🔗 Repository</a>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script>
+        // Add some interactive effects
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.borderColor = '#cccccc';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.borderColor = '#ffffff';
+            });
+        });
+
+        // Simulate loading effect
+        setTimeout(() => {
+            document.querySelector('.terminal-prompt').textContent = 'gotr00t@projects:~$ Arsenal loaded. Ready for deployment.';
+        }, 2000);
+    </script>
 </body>
 </html>
 

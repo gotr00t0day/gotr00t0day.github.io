@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CVE Arsenal - gotr00t</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(45deg, #000000, #0a0a0a, #111111);
+            color: #ffffff;
+            font-family: 'Share Tech Mono', monospace;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Animated gray background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 50%);
+            animation: pulseGlow 3s ease-in-out infinite alternate;
+            z-index: -1;
+        }
+
+        @keyframes pulseGlow {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.7; }
+        }
+
+        /* Matrix-style falling code effect */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+            animation: matrixFlow 4s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes matrixFlow {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 3.5em;
+            color: #ffffff;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            animation: dangerGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes dangerGlow {
+            from { text-shadow: 0 0 30px rgba(255, 255, 255, 0.8); }
+            to { text-shadow: 0 0 50px rgba(255, 255, 255, 1), 0 0 80px rgba(255, 255, 255, 0.5); }
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #cccccc;
+            margin-bottom: 10px;
+        }
+
+        .nav-back {
+            display: inline-block;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 12px 25px;
+            border: 2px solid #ffffff;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            background: rgba(0, 0, 0, 0.8);
+            font-weight: bold;
+        }
+
+        .nav-back:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+            transform: translateY(-3px);
+        }
+
+        .cve-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .cve-card {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #ffffff;
+            border-radius: 12px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cve-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .cve-card:hover::before {
+            left: 100%;
+        }
+
+        .cve-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(255, 255, 255, 0.4);
+            border-color: #cccccc;
+        }
+
+        .cve-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .cve-id {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.4em;
+            color: #ffffff;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .severity-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: pulseBadge 2s infinite;
+        }
+
+        .critical {
+            background: rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            border: 2px solid #ffffff;
+        }
+
+        .high {
+            background: rgba(204, 204, 204, 0.3);
+            color: #cccccc;
+            border: 2px solid #cccccc;
+        }
+
+        .medium {
+            background: rgba(153, 153, 153, 0.3);
+            color: #999999;
+            border: 2px solid #999999;
+        }
+
+        @keyframes pulseBadge {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .cve-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.3em;
+            color: #ffffff;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .cve-description {
+            color: #cccccc;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+        }
+
+        .cve-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+
+        .meta-item {
+            text-align: center;
+        }
+
+        .meta-label {
+            font-size: 0.8em;
+            color: #999999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .meta-value {
+            font-weight: bold;
+            color: #ffffff;
+            font-size: 0.9em;
+        }
+
+        .cve-links {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .cve-link {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 1px solid #ffffff;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.85em;
+        }
+
+        .cve-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .impact-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: #ffffff;
+            color: #000;
+            padding: 5px 10px;
+            font-size: 0.7em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 0 8px 0 8px;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.7; }
+        }
+
+        .stats-section {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            border: 2px solid #ffffff;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+
+        .stat-number {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5em;
+            color: #ffffff;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #cccccc;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .cve-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+            
+            h1 {
+                font-size: 2.5em;
+            }
+            
+            .cve-card {
+                padding: 25px;
+            }
+            
+            .cve-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            
+            .stat-number {
+                font-size: 2em;
+            }
+        }
+
+        .terminal-prompt {
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .terminal-prompt::before {
+            content: "";
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap;">
+            <a href="index.html" class="nav-back">🏠 Home</a>
+            <a href="poc.html" class="nav-back" style="background: rgba(255, 255, 255, 0.2);">⚡ PoC</a>
+            <a href="projects.html" class="nav-back">🔧 Projects</a>
+            <a href="contact.html" class="nav-back">📧 Contact</a>
+        </div>
+        <h1>CVE Arsenal</h1>
+        <p class="subtitle">Critical Vulnerability Research & Exploitation</p>
+        <p class="terminal-prompt">gotr00t@arsenal:~$ Loading discovered vulnerabilities...</p>
+    </div>
+
+    <div class="stats-section">
+        <h2 style="color: #ffffff; margin-bottom: 20px; font-family: 'Orbitron', monospace;">Security Research Statistics</h2>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number">16</div>
+                <div class="stat-label">CVEs & PoCs</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">30+</div>
+                <div class="stat-label">GitHub Stars</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">9.8</div>
+                <div class="stat-label">Max CVSS Score</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">5</div>
+                <div class="stat-label">Research Tools</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cve-grid">
+        <!-- CVE-2024-4040 -->
+        <div class="cve-card">
+            <div class="impact-badge">CRITICAL</div>
+            <div class="cve-header">
+                <div class="cve-id">CVE-2024-4040</div>
+                <div class="severity-badge critical">CVSS 9.8</div>
+            </div>
+            <div class="cve-title">CrushFTP Server Side Template Injection</div>
+            <div class="cve-description">
+                Critical Server Side Template Injection (SSTI) vulnerability in CrushFTP that allows remote code execution through template manipulation. Affects multiple versions and can lead to complete system compromise with administrative privileges.
+            </div>
+            <div class="cve-meta">
+                <div class="meta-item">
+                    <div class="meta-label">Year</div>
+                    <div class="meta-value">2024</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Type</div>
+                    <div class="meta-value">SSTI/RCE</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Impact</div>
+                    <div class="meta-value">Critical</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Stars</div>
+                    <div class="meta-value">⭐ 8</div>
+                </div>
+            </div>
+            <div class="cve-links">
+                <a href="https://github.com/gotr00t0day/CVE-2024-4040" target="_blank" class="cve-link">🔗 PoC Repository</a>
+                <a href="https://nvd.nist.gov/vuln/detail/CVE-2024-4040" target="_blank" class="cve-link">📋 CVE Details</a>
+            </div>
+        </div>
+
+        <!-- CVE-2023-43208 -->
+        <div class="cve-card">
+            <div class="impact-badge">CRITICAL</div>
+            <div class="cve-header">
+                <div class="cve-id">CVE-2023-43208</div>
+                <div class="severity-badge critical">CVSS 9.8</div>
+            </div>
+            <div class="cve-title">NextGen Mirth Connect Pre-Auth RCE</div>
+            <div class="cve-description">
+                Pre-authentication Remote Code Execution vulnerability in NextGen Mirth Connect that allows attackers to execute arbitrary code without authentication. Critical severity with widespread impact on healthcare systems.
+            </div>
+            <div class="cve-meta">
+                <div class="meta-item">
+                    <div class="meta-label">Year</div>
+                    <div class="meta-value">2023</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Type</div>
+                    <div class="meta-value">Pre-Auth RCE</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Impact</div>
+                    <div class="meta-value">Critical</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Stars</div>
+                    <div class="meta-value">⭐ 4</div>
+                </div>
+            </div>
+            <div class="cve-links">
+                <a href="https://github.com/gotr00t0day/CVE-2023-43208" target="_blank" class="cve-link">🔗 PoC Repository</a>
+                <a href="https://nvd.nist.gov/vuln/detail/CVE-2023-43208" target="_blank" class="cve-link">📋 CVE Details</a>
+            </div>
+        </div>
+
+        <!-- CVE-2024-4577 -->
+        <div class="cve-card">
+            <div class="impact-badge">CRITICAL</div>
+            <div class="cve-header">
+                <div class="cve-id">CVE-2024-4577</div>
+                <div class="severity-badge critical">CVSS 9.8</div>
+            </div>
+            <div class="cve-title">PHP CGI Argument Injection RCE</div>
+            <div class="cve-description">
+                Critical argument injection vulnerability in PHP CGI affecting Windows systems when using certain locale settings. Allows remote code execution through crafted HTTP requests.
+            </div>
+            <div class="cve-meta">
+                <div class="meta-item">
+                    <div class="meta-label">Year</div>
+                    <div class="meta-value">2024</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Type</div>
+                    <div class="meta-value">CGI RCE</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Impact</div>
+                    <div class="meta-value">Critical</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Repo</div>
+                    <div class="meta-value">CVE-2024-4577</div>
+                </div>
+            </div>
+            <div class="cve-links">
+                <a href="https://github.com/gotr00t0day/CVE-2024-4577" target="_blank" class="cve-link">🔗 PoC Repository</a>
+            </div>
+        </div>
+
+        <!-- CVE-2022-1388 -->
+        <div class="cve-card">
+            <div class="impact-badge">CRITICAL</div>
+            <div class="cve-header">
+                <div class="cve-id">CVE-2022-1388</div>
+                <div class="severity-badge critical">CVSS 9.8</div>
+            </div>
+            <div class="cve-title">F5 BIG-IP iControl REST API Authentication Bypass</div>
+            <div class="cve-description">
+                Critical authentication bypass vulnerability in F5 BIG-IP iControl REST API that allows unauthenticated remote code execution with administrative privileges.
+            </div>
+            <div class="cve-meta">
+                <div class="meta-item">
+                    <div class="meta-label">Year</div>
+                    <div class="meta-value">2022</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Type</div>
+                    <div class="meta-value">Auth Bypass</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Impact</div>
+                    <div class="meta-value">Critical</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Stars</div>
+                    <div class="meta-value">⭐ 5</div>
+                </div>
+            </div>
+            <div class="cve-links">
+                <a href="https://github.com/gotr00t0day/CVE-2022-1388" target="_blank" class="cve-link">🔗 PoC Repository</a>
+            </div>
+        </div>
+
+        <!-- CVE-2025-29927 -->
+        <div class="cve-card">
+            <div class="impact-badge">CRITICAL</div>
+            <div class="cve-header">
+                <div class="cve-id">CVE-2025-29927</div>
+                <div class="severity-badge critical">CVSS 9.1</div>
+            </div>
+            <div class="cve-title">Next.js Middleware Authorization Bypass</div>
+            <div class="cve-description">
+                Authorization bypass vulnerability in Next.js middleware that allows attackers to access protected routes by manipulating request headers and bypassing security controls.
+            </div>
+            <div class="cve-meta">
+                <div class="meta-item">
+                    <div class="meta-label">Year</div>
+                    <div class="meta-value">2025</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Type</div>
+                    <div class="meta-value">Auth Bypass</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Impact</div>
+                    <div class="meta-value">Critical</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Repo</div>
+                    <div class="meta-value">CVE-2025-29927</div>
+                </div>
+            </div>
+            <div class="cve-links">
+                <a href="https://github.com/gotr00t0day/CVE-2025-29927" target="_blank" class="cve-link">🔗 PoC Repository</a>
+            </div>
+        </div>
+
+        <!-- Ivanti_PoC -->
+        <div class="cve-card">
+            <div class="impact-badge">HIGH</div>
+            <div class="cve-header">
+                <div class="cve-id">Ivanti_PoC</div>
+                <div class="severity-badge high">High Impact</div>
+            </div>
+            <div class="cve-title">Ivanti Endpoint Manager Mobile Authentication Bypass</div>
+            <div class="cve-description">
+                Authentication bypass vulnerability in Ivanti Endpoint Manager Mobile (EPMM) that allows unauthorized access to administrative functions and sensitive enterprise data.
+            </div>
+            <div class="cve-meta">
+                <div class="meta-item">
+                    <div class="meta-label">Year</div>
+                    <div class="meta-value">2024</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Type</div>
+                    <div class="meta-value">Auth Bypass</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Impact</div>
+                    <div class="meta-value">High</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Stars</div>
+                    <div class="meta-value">⭐ 3</div>
+                </div>
+            </div>
+            <div class="cve-links">
+                <a href="https://github.com/gotr00t0day/Ivanti_PoC" target="_blank" class="cve-link">🔗 PoC Repository</a>
+            </div>
+        </div>
+
+        <!-- Additional exploits from 3xplo1tz repository -->
+        <div class="cve-card">
+            <div class="impact-badge">ARSENAL</div>
+            <div class="cve-header">
+                <div class="cve-id">3xplo1tz</div>
+                <div class="severity-badge critical">Multi-CVE</div>
+            </div>
+            <div class="cve-title">Advanced Exploitation Collection</div>
+            <div class="cve-description">
+                Comprehensive collection of 10 advanced proof-of-concept exploits including CVE-2025-31161, CVE-2024-4879, CVE-2024-28995, CVE-2024-0204, CVE-2023-30258, MS15-034, Shellshock, SpringBoot, TeamCity, and Zyxel PoC. Multi-platform exploitation toolkit for security research.
+            </div>
+            <div class="cve-meta">
+                <div class="meta-item">
+                    <div class="meta-label">Exploits</div>
+                    <div class="meta-value">10 PoCs</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Type</div>
+                    <div class="meta-value">Multi-Vector</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Impact</div>
+                    <div class="meta-value">Various</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Collection</div>
+                    <div class="meta-value">Research</div>
+                </div>
+            </div>
+            <div class="cve-links">
+                <a href="https://github.com/gotr00t0day/3xplo1tz" target="_blank" class="cve-link">🔗 Exploit Collection</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add interactive effects
+        document.querySelectorAll('.cve-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.borderColor = '#cccccc';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.borderColor = '#ffffff';
+            });
+        });
+
+        // Simulate loading effect
+        setTimeout(() => {
+            document.querySelector('.terminal-prompt').textContent = 'gotr00t@arsenal:~$ Vulnerability database loaded. 16 critical discoveries indexed.';
+        }, 2000);
+    </script>
+</body>
+</html> 

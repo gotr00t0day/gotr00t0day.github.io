@@ -4,88 +4,346 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>gotr00t - The Hacker Cave</title>
+    <title>gotr00t - Underground Hacker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body {
-            background-color: black;
-            color: white;
-            font-family: 'Courier New', Courier, monospace;
+        * {
             margin: 0;
             padding: 0;
-            overflow: hidden;
+            box-sizing: border-box;
         }
 
-        #menu {
-            position: absolute;
-            left: 0;
+        body {
+            background: linear-gradient(45deg, #000000, #0a0a0a, #111111);
+            color: #ffffff;
+            font-family: 'Share Tech Mono', monospace;
+            min-height: 100vh;
+        }
+
+        /* Animated binary background */
+        body::before {
+            content: "";
+            position: fixed;
             top: 0;
+            left: 0;
+            width: 100%;
             height: 100%;
-            width: 150px;
-            background-color: black;
-            padding: 20px;
-            box-sizing: border-box;
-            text-align: center;
+            background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.15) 1px, transparent 0);
+            background-size: 20px 20px;
+            animation: binaryFlow 10s linear infinite;
+            z-index: -1;
         }
 
-        #content {
-            margin-left: 170px;
+        @keyframes binaryFlow {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(20px); }
+        }
+
+        #container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        #sidebar {
+            width: 200px;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border-right: 2px solid #ffffff;
             padding: 20px;
-            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
         }
 
         #logo {
             text-align: center;
+            margin-bottom: 30px;
+        }
+
+        #logo img {
+            width: 120px;
+            height: auto;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        #logo img:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-link {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 15px;
+            margin: 5px 0;
+            display: block;
+            border: 1px solid transparent;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #ffffff;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            transform: translateX(5px);
+        }
+
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #ffffff;
+            color: #ffffff;
+        }
+
+        #content {
+            flex: 1;
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 4em;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            margin-bottom: 30px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
+            to { text-shadow: 0 0 30px rgba(255, 255, 255, 0.8); }
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            color: #cccccc;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        .description {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #ffffff;
+            margin-bottom: 40px;
+            max-width: 800px;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .skill-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #ffffff;
+            border-radius: 10px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .skill-card:hover::before {
+            left: 100%;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+            border-color: #cccccc;
+        }
+
+        .skill-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .skill-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.3em;
+            color: #ffffff;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .skill-description {
+            color: #cccccc;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .terminal-prompt {
+            color: #ffffff;
+            font-weight: bold;
             margin-bottom: 20px;
         }
 
-        a {
-            color: white;
+        .terminal-prompt::before {
+            content: "";
+        }
+
+        .social-links {
+            margin-top: 40px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            color: #ffffff;
             text-decoration: none;
-            display: block;
-            margin-bottom: 10px;
+            padding: 12px 25px;
+            border: 2px solid #ffffff;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            background: rgba(0, 0, 0, 0.8);
+            font-weight: bold;
         }
 
-        h1,
-        h2 {
-            color: #00FF00;
+        .social-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            transform: translateY(-3px);
         }
 
-        #social {
-            position: absolute;
-            right: 20px;
-            top: 20px;
-            text-align: right;
-        }
-
-        #social a {
-            margin: 10px;
-            display: block;
+        /* Responsive design */
+        @media (max-width: 768px) {
+            #container {
+                flex-direction: column;
+            }
+            
+            #sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 2px solid #ffffff;
+            }
+            
+            h1 {
+                font-size: 2.5em;
+            }
+            
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div id="menu">
-        <div id="logo">
-            <img src="gotr00t_wallpaper.png" alt="gotr00t Logo" width="100">
+    <div id="container">
+        <div id="sidebar">
+            <div id="logo">
+                <img src="gotr00t_wallpaper.png" alt="gotr00t logo">
+            </div>
+            <a href="index.html" class="nav-link active">🏠 Home</a>
+            <a href="poc.html" class="nav-link">⚡ PoC</a>
+            <a href="projects.html" class="nav-link">🔧 Projects</a>
+            <a href="contact.html" class="nav-link">📧 Contact</a>
+            <a href="#scripts" class="nav-link">💀 Ownage</a>
         </div>
-        <a href="#exploits">PoC</a>
-        <a href="https://gotr00t0day.github.io/projects.html">Projects</a>
-        <a href="https://gotr00t0day.github.io/tutorials.html">Tutorials</a>
-        <a href="#scripts">Ownage</a>
-    </div>
-    <div id="content">
-        <h1>Welcome to gotr00t</h1>
-        <p>Enter the shadows where code is a weapon, exploits are currency, and every hack leaves a digital scar.</p>
-        <p>Uncover the darkest exploits, share covert scripts, and wield powerful tools in the pursuit of knowledge and chaos.</p>
-        <p>The journey into the abyss awaits. Welcome to gotr00t, where shadows dance and codes whisper.</p>
-    </div>
-    <marquee behavior="scroll" direction="left">This is our world now... the world of the electron and the switch</marquee>
-    <div id="social">
-        <a href="https://www.instagram.com/gotr00t0day" target="_blank">Instagram</a>
-        <a href="https://twitter.com/gotr00t0day" target="_blank">Twitter</a>
-        <a href="https://github.com/gotr00t0day" target="_blank">GitHub</a>
-    </div>
-</body>
+        
+        <div id="content">
+            <h1>gotr00t</h1>
+            <p class="subtitle">Underground Security Researcher</p>
+            <p class="terminal-prompt">gotr00t@hacker:~$ System initialized. Welcome to the shadows.</p>
+            
+            <div class="description">
+                Welcome to my digital underground. I'm a security researcher specializing in vulnerability discovery, 
+                penetration testing, and exploit development. My work focuses on uncovering critical security flaws 
+                and developing proof-of-concept exploits to help organizations strengthen their defenses.
+            </div>
 
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <div class="skill-icon">🔍</div>
+                    <div class="skill-title">Vulnerability Research</div>
+                    <div class="skill-description">
+                        Discovering zero-day vulnerabilities and security flaws in web applications, 
+                        networks, and systems through advanced reconnaissance and analysis techniques.
+                    </div>
+                </div>
+
+                <div class="skill-card">
+                    <div class="skill-icon">💥</div>
+                    <div class="skill-title">Exploit Development</div>
+                    <div class="skill-description">
+                        Crafting sophisticated proof-of-concept exploits and payloads to demonstrate 
+                        the impact of discovered vulnerabilities and assist in remediation efforts.
+                    </div>
+                </div>
+
+                <div class="skill-card">
+                    <div class="skill-icon">🛡️</div>
+                    <div class="skill-title">Penetration Testing</div>
+                    <div class="skill-description">
+                        Comprehensive security assessments using advanced methodologies to identify 
+                        weaknesses and provide actionable recommendations for security improvements.
+                    </div>
+                </div>
+
+                <div class="skill-card">
+                    <div class="skill-icon">⚙️</div>
+                    <div class="skill-title">Tool Development</div>
+                    <div class="skill-description">
+                        Creating custom security tools and frameworks to automate vulnerability discovery, 
+                        streamline testing processes, and enhance overall security assessment capabilities.
+                    </div>
+                </div>
+            </div>
+
+            <div class="social-links">
+                <a href="https://github.com/gotr00t0day" target="_blank" class="social-link">
+                    🐙 GitHub Arsenal
+                </a>
+                <a href="contact.html" class="social-link">
+                    📧 Secure Contact
+                </a>
+                <a href="poc.html" class="social-link">
+                    🏆 CVE Discoveries
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add some interactive effects
+        document.querySelectorAll('.skill-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.borderColor = '#cccccc';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.borderColor = '#ffffff';
+            });
+        });
+
+        // Simulate system initialization
+        setTimeout(() => {
+            document.querySelector('.terminal-prompt').textContent = 'gotr00t@hacker:~$ Access granted. Explore the digital underground.';
+        }, 2000);
+    </script>
+</body>
 </html>

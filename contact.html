@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Contact - gotr00t</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(45deg, #000000, #0a0a0a, #111111);
+            color: #ffffff;
+            font-family: 'Share Tech Mono', monospace;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Animated binary background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.15) 1px, transparent 0);
+            background-size: 20px 20px;
+            animation: binaryFlow 10s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes binaryFlow {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(20px); }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 3.5em;
+            color: #ffffff;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 30px rgba(255, 255, 255, 0.8); }
+            to { text-shadow: 0 0 50px rgba(255, 255, 255, 1), 0 0 80px rgba(255, 255, 255, 0.5); }
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #cccccc;
+            margin-bottom: 10px;
+        }
+
+        .nav-back {
+            display: inline-block;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 12px 25px;
+            border: 2px solid #ffffff;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            background: rgba(0, 0, 0, 0.8);
+            font-weight: bold;
+        }
+
+        .nav-back:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+            transform: translateY(-3px);
+        }
+
+        .contact-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .contact-card {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #ffffff;
+            border-radius: 12px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .contact-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .contact-card:hover::before {
+            left: 100%;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255, 255, 255, 0.3);
+            border-color: #cccccc;
+        }
+
+        .contact-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+            display: block;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .contact-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.4em;
+            color: #ffffff;
+            margin-bottom: 15px;
+        }
+
+        .contact-handle {
+            color: #cccccc;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .contact-link {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 12px 25px;
+            border: 2px solid #ffffff;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+        }
+
+        .contact-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .warning-section {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #ffffff;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .warning-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5em;
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+
+        .warning-text {
+            color: #cccccc;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .encryption-note {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .encryption-title {
+            color: #ffffff;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .encryption-text {
+            color: #cccccc;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            h1 {
+                font-size: 2.5em;
+            }
+            
+            .contact-card {
+                padding: 25px;
+            }
+        }
+
+        .terminal-prompt {
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .terminal-prompt::before {
+            content: "";
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap;">
+            <a href="index.html" class="nav-back">🏠 Home</a>
+            <a href="poc.html" class="nav-back">⚡ PoC</a>
+            <a href="projects.html" class="nav-back">🔧 Projects</a>
+            <a href="contact.html" class="nav-back" style="background: rgba(255, 255, 255, 0.2);">📧 Contact</a>
+        </div>
+        <h1>Secure Contact</h1>
+        <p class="subtitle">Encrypted Communication Channels</p>
+        <p class="terminal-prompt">gotr00t@contact:~$ Establishing secure connections...</p>
+    </div>
+
+    <div class="contact-container">
+        <div class="contact-grid">
+            <!-- GitHub -->
+            <div class="contact-card">
+                <div class="contact-icon">🐙</div>
+                <div class="contact-title">GitHub Arsenal</div>
+                <div class="contact-handle">@gotr00t0day</div>
+                <a href="https://github.com/gotr00t0day" target="_blank" class="contact-link">🔗 Access Repository</a>
+            </div>
+
+            <!-- Instagram -->
+            <div class="contact-card">
+                <div class="contact-icon">📷</div>
+                <div class="contact-title">Instagram</div>
+                <div class="contact-handle">@gotr00t0day</div>
+                <a href="https://instagram.com/gotr00t0day" target="_blank" class="contact-link">🔗 Follow Updates</a>
+            </div>
+
+            <!-- YouTube -->
+            <div class="contact-card">
+                <div class="contact-icon">📺</div>
+                <div class="contact-title">YouTube Channel</div>
+                <div class="contact-handle">@gotr00tc0d3Ninja</div>
+                <a href="https://youtube.com/@gotr00tc0d3Ninja" target="_blank" class="contact-link">🔗 Watch Content</a>
+            </div>
+
+            <!-- Twitter -->
+            <div class="contact-card">
+                <div class="contact-icon">🐦</div>
+                <div class="contact-title">Twitter</div>
+                <div class="contact-handle">@gotr00t0day</div>
+                <a href="https://twitter.com/gotr00t0day" target="_blank" class="contact-link">🔗 Follow Feed</a>
+            </div>
+        </div>
+
+        <div class="warning-section">
+            <div class="warning-title">⚠️ Security Notice</div>
+            <div class="warning-text">
+                All communications are monitored for security purposes. Use these channels for legitimate security research inquiries only.
+            </div>
+            <div class="warning-text">
+                For sensitive security disclosures, please use responsible disclosure practices and consider encrypted communication methods.
+            </div>
+            
+            <div class="encryption-note">
+                <div class="encryption-title">🔐 Secure Communication</div>
+                <div class="encryption-text">
+                    For confidential vulnerability reports or sensitive security matters, ensure proper encryption is used. 
+                    All public communications should follow responsible disclosure guidelines and industry best practices.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add interactive effects
+        document.querySelectorAll('.contact-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.borderColor = '#cccccc';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.borderColor = '#ffffff';
+            });
+        });
+
+        // Simulate connection effect
+        setTimeout(() => {
+            document.querySelector('.terminal-prompt').textContent = 'gotr00t@contact:~$ Secure channels established. Communication links active.';
+        }, 2000);
+    </script>
+</body>
+</html> 
