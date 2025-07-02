@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Underground Arsenal - gotr00t</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -75,6 +76,13 @@
             background: rgba(255, 255, 255, 0.1);
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
             transform: translateY(-3px);
+        }
+
+        .nav-back i {
+            color: #ffffff;
+            margin-right: 8px;
+            width: 16px;
+            text-align: center;
         }
 
         .projects-grid {
@@ -249,10 +257,10 @@
 <body>
     <div class="header">
         <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap;">
-            <a href="index.html" class="nav-back">🏠 Home</a>
-            <a href="poc.html" class="nav-back">⚡ PoC</a>
-            <a href="projects.html" class="nav-back" style="background: rgba(255, 255, 255, 0.2);">🔧 Projects</a>
-            <a href="contact.html" class="nav-back">📧 Contact</a>
+                            <a href="index.html" class="nav-back"><i class="fas fa-home"></i>Home</a>
+                <a href="poc.html" class="nav-back"><i class="fas fa-bug"></i>PoC</a>
+                <a href="projects.html" class="nav-back" style="background: rgba(255, 255, 255, 0.2);"><i class="fas fa-code"></i>Projects</a>
+                <a href="contact.html" class="nav-back"><i class="fas fa-envelope"></i>Contact</a>
         </div>
         <h1>Underground Arsenal</h1>
         <p class="terminal-prompt">gotr00t@projects:~$ Loading weapons cache...</p>

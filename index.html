@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>gotr00t - Underground Hacker</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -99,6 +100,13 @@
             background: rgba(255, 255, 255, 0.2);
             border-color: #ffffff;
             color: #ffffff;
+        }
+
+        .nav-link i {
+            color: #ffffff;
+            margin-right: 8px;
+            width: 16px;
+            text-align: center;
         }
 
         #content {
@@ -255,14 +263,14 @@
 <body>
     <div id="container">
         <div id="sidebar">
-            <div id="logo">
+        <div id="logo">
                 <img src="gotr00t_wallpaper.png" alt="gotr00t logo">
             </div>
-            <a href="index.html" class="nav-link active">🏠 Home</a>
-            <a href="poc.html" class="nav-link">⚡ PoC</a>
-            <a href="projects.html" class="nav-link">🔧 Projects</a>
-            <a href="contact.html" class="nav-link">📧 Contact</a>
-            <a href="#scripts" class="nav-link">💀 Ownage</a>
+                            <a href="index.html" class="nav-link active"><i class="fas fa-home"></i>Home</a>
+                <a href="poc.html" class="nav-link"><i class="fas fa-bug"></i>PoC</a>
+                <a href="projects.html" class="nav-link"><i class="fas fa-code"></i>Projects</a>
+                <a href="contact.html" class="nav-link"><i class="fas fa-envelope"></i>Contact</a>
+                <a href="#scripts" class="nav-link"><i class="fas fa-skull"></i>Ownage</a>
         </div>
         
         <div id="content">
@@ -324,8 +332,8 @@
                 <a href="poc.html" class="social-link">
                     🏆 CVE Discoveries
                 </a>
-            </div>
-        </div>
+    </div>
+    </div>
     </div>
 
     <script>
