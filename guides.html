@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gotr00t - Security Guides</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(45deg, #000000, #0a0a0a, #111111);
+            color: #ffffff;
+            font-family: 'Share Tech Mono', monospace;
+            min-height: 100vh;
+        }
+
+        /* Animated binary background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.15) 1px, transparent 0);
+            background-size: 20px 20px;
+            animation: binaryFlow 10s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes binaryFlow {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(20px); }
+        }
+
+        #container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        #sidebar {
+            width: 200px;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border-right: 2px solid #ffffff;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        #logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        #logo img {
+            width: 120px;
+            height: auto;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        #logo img:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-link {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 15px;
+            margin: 5px 0;
+            display: block;
+            border: 1px solid transparent;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #ffffff;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            transform: translateX(5px);
+        }
+
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #ffffff;
+            color: #ffffff;
+        }
+
+        .nav-link i {
+            color: #ffffff;
+            margin-right: 8px;
+            width: 16px;
+            text-align: center;
+        }
+
+        #content {
+            flex: 1;
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        .terminal-header {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #ffffff;
+            border-radius: 10px 10px 0 0;
+            padding: 15px;
+            margin-bottom: 0;
+            font-family: 'Share Tech Mono', monospace;
+            color: #ffffff;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .terminal-body {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #ffffff;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 3.5em;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            margin-bottom: 30px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
+            to { text-shadow: 0 0 30px rgba(255, 255, 255, 0.8); }
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            color: #cccccc;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        .guides-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .guide-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #ffffff;
+            border-radius: 10px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .guide-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .guide-card:hover::before {
+            left: 100%;
+        }
+
+        .guide-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+            border-color: #cccccc;
+        }
+
+        .guide-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .guide-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5em;
+            color: #ffffff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .guide-description {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #cccccc;
+            margin-bottom: 25px;
+        }
+
+        .guide-topics {
+            list-style: none;
+            padding: 0;
+        }
+
+        .guide-topics li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 0.95em;
+        }
+
+        .guide-topics li:last-child {
+            border-bottom: none;
+        }
+
+        .guide-topics li::before {
+            content: "›";
+            color: #ffffff;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .github-link {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #ffffff;
+            border-radius: 5px;
+            padding: 10px 20px;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .github-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .github-link i {
+            margin-right: 8px;
+        }
+
+        .warning-box {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px 0;
+            color: #ffffff;
+        }
+
+        .warning-box h3 {
+            color: #ffffff;
+            margin-bottom: 15px;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .warning-box p {
+            line-height: 1.6;
+            color: #cccccc;
+        }
+
+        @media (max-width: 768px) {
+            #container {
+                flex-direction: column;
+            }
+            
+            #sidebar {
+                width: 100%;
+                order: 2;
+            }
+            
+            #content {
+                order: 1;
+            }
+            
+            .guides-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.5em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <div id="sidebar">
+            <div id="logo">
+                <img src="gotr00t_wallpaper.png" alt="gotr00t Logo">
+            </div>
+            <nav>
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="projects.html" class="nav-link">
+                    <i class="fas fa-code"></i> Projects
+                </a>
+                <a href="guides.html" class="nav-link active">
+                    <i class="fas fa-book"></i> Guides
+                </a>
+                <a href="contact.html" class="nav-link">
+                    <i class="fas fa-envelope"></i> Contact
+                </a>
+            </nav>
+        </div>
+
+        <div id="content">
+            <div class="terminal-header">
+                gotr00t@guides:~$ cat security_guides.txt
+            </div>
+            <div class="terminal-body">
+                <h1>Security Guides</h1>
+                <p class="subtitle">Comprehensive guides for penetration testing, bug bounty hunting, and advanced security research</p>
+                
+                <div class="warning-box">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Legal Notice</h3>
+                    <p>All guides and techniques provided are for educational and authorized testing purposes only. Use these resources responsibly and only against systems you own or have explicit permission to test. Unauthorized access is illegal and unethical.</p>
+                </div>
+
+                <div class="guides-grid">
+                    <div class="guide-card">
+                        <div class="guide-icon">
+                            <i class="fas fa-route"></i>
+                        </div>
+                        <h2 class="guide-title">Penetration Testing Roadmap</h2>
+                        <p class="guide-description">
+                            A comprehensive roadmap for aspiring penetration testers, covering everything from networking fundamentals to advanced exploitation techniques.
+                        </p>
+                        <ul class="guide-topics">
+                            <li>Computer Fundamentals & Networking</li>
+                            <li>Operating Systems (Windows, Linux, MacOS)</li>
+                            <li>Programming Languages (Python, PowerShell, Bash)</li>
+                            <li>Web Application Security</li>
+                            <li>Network Security & Protocols</li>
+                            <li>Vulnerability Assessment</li>
+                            <li>Exploitation Techniques</li>
+                            <li>Post-Exploitation & Persistence</li>
+                            <li>Reporting & Documentation</li>
+                            <li>Certification Paths (OSCP, CEH, CISSP)</li>
+                        </ul>
+                        <a href="https://github.com/gotr00t0day/Pentesting-Roadmap" class="github-link" target="_blank">
+                            <i class="fab fa-github"></i> View Repository
+                        </a>
+                    </div>
+
+                    <div class="guide-card">
+                        <div class="guide-icon">
+                            <i class="fas fa-bug"></i>
+                        </div>
+                        <h2 class="guide-title">Bug Bounty Hunting</h2>
+                        <p class="guide-description">
+                            Master the art of bug bounty hunting with methodologies, tools, and techniques used by top researchers to find vulnerabilities.
+                        </p>
+                        <ul class="guide-topics">
+                            <li>Reconnaissance & Information Gathering</li>
+                            <li>Subdomain Enumeration</li>
+                            <li>Web Application Testing</li>
+                            <li>API Security Testing</li>
+                            <li>Mobile Application Testing</li>
+                            <li>Common Vulnerability Types</li>
+                            <li>Automation & Tooling</li>
+                            <li>Report Writing & Communication</li>
+                            <li>Bug Bounty Platforms</li>
+                            <li>Legal & Ethical Considerations</li>
+                        </ul>
+                        <a href="https://github.com/gotr00t0day/BugBounty" class="github-link" target="_blank">
+                            <i class="fab fa-github"></i> View Repository
+                        </a>
+                    </div>
+
+                    <div class="guide-card">
+                        <div class="guide-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h2 class="guide-title">SMTP & Postfix Pentesting</h2>
+                        <p class="guide-description">
+                            Deep dive into SMTP server security, Postfix configuration vulnerabilities, and email system exploitation techniques.
+                        </p>
+                        <ul class="guide-topics">
+                            <li>SMTP Protocol Fundamentals</li>
+                            <li>Postfix Configuration Analysis</li>
+                            <li>Email Header Injection</li>
+                            <li>SMTP Relay Attacks</li>
+                            <li>User Enumeration Techniques</li>
+                            <li>Email Spoofing & Phishing</li>
+                            <li>SPF, DKIM, DMARC Bypass</li>
+                            <li>SMTP Smuggling Attacks</li>
+                            <li>Mail Server Reconnaissance</li>
+                            <li>Exploitation Tools & Scripts</li>
+                        </ul>
+                        <a href="https://github.com/gotr00t0day/SMTP-PostFix-Pentesting" class="github-link" target="_blank">
+                            <i class="fab fa-github"></i> View Repository
+                        </a>
+                    </div>
+
+                    <div class="guide-card">
+                        <div class="guide-icon">
+                            <i class="fas fa-windows"></i>
+                        </div>
+                        <h2 class="guide-title">Windows Persistence</h2>
+                        <p class="guide-description">
+                            Advanced techniques for maintaining persistence on Windows systems during red team operations and penetration testing.
+                        </p>
+                        <ul class="guide-topics">
+                            <li>Registry-based Persistence</li>
+                            <li>Service Persistence</li>
+                            <li>Scheduled Tasks</li>
+                            <li>WMI Event Subscriptions</li>
+                            <li>DLL Hijacking</li>
+                            <li>COM Object Hijacking</li>
+                            <li>Startup Folder Persistence</li>
+                            <li>BITS Jobs</li>
+                            <li>PowerShell Profile Backdoors</li>
+                            <li>Detection Evasion Techniques</li>
+                        </ul>
+                        <a href="https://github.com/gotr00t0day/Windows-Persistence" class="github-link" target="_blank">
+                            <i class="fab fa-github"></i> View Repository
+                        </a>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h3><i class="fas fa-shield-alt"></i> Responsible Disclosure</h3>
+                    <p>When conducting security research, always follow responsible disclosure practices. Report vulnerabilities to the appropriate parties through proper channels and give organizations time to patch before public disclosure.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
