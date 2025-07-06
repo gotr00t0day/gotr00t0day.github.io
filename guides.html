@@ -251,17 +251,42 @@
                 padding: 15px;
             }
             
-            .guides-grid {
-                grid-template-columns: 1fr;
-                gap: 25px;
+            .categories-container {
+                padding: 0 10px;
             }
             
             h1 {
                 font-size: 2.5em;
             }
             
-            .guide-card {
-                padding: 25px;
+            .category-header {
+                padding: 15px 20px;
+            }
+            
+            .category-name {
+                font-size: 1.1em;
+            }
+            
+            .guide-item {
+                padding: 12px 20px;
+                gap: 15px;
+            }
+            
+            .guide-item i {
+                font-size: 1.5em;
+                min-width: 35px;
+            }
+            
+            .guide-info h3 {
+                font-size: 1em;
+            }
+            
+            .guide-info p {
+                font-size: 0.85em;
+            }
+            
+            .guide-link {
+                padding: 8px 12px;
             }
         }
 
@@ -274,26 +299,37 @@
             content: "";
         }
 
-        .category-section {
-            margin-bottom: 60px;
+        .categories-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
-        .category-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 2.2em;
-            color: #ffffff;
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
+        .category-dropdown {
+            margin-bottom: 20px;
             border: 2px solid #ffffff;
             border-radius: 15px;
             background: rgba(0, 0, 0, 0.8);
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .category-dropdown:hover {
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
 
-        .category-title::before {
+        .category-header::before {
             content: "";
             position: absolute;
             top: 0;
@@ -304,18 +340,118 @@
             transition: left 0.5s ease;
         }
 
-        .category-title:hover::before {
+        .category-header:hover::before {
             left: 100%;
         }
 
-        .category-title:hover {
-            box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
+        .category-header:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .category-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .category-info i {
+            font-size: 1.5em;
+            color: #ffffff;
+        }
+
+        .category-name {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.3em;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .guide-count {
+            font-size: 0.9em;
+            color: #cccccc;
+            margin-left: 10px;
+        }
+
+        .dropdown-arrow {
+            font-size: 1.2em;
+            color: #ffffff;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown-arrow.rotated {
+            transform: rotate(180deg);
+        }
+
+        .category-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .category-content.active {
+            max-height: 1000px;
+        }
+
+        .guide-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 15px 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .guide-item:last-child {
+            border-bottom: none;
+        }
+
+        .guide-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(5px);
+        }
+
+        .guide-item i {
+            font-size: 1.8em;
+            color: #ffffff;
+            min-width: 40px;
+        }
+
+        .guide-info {
+            flex: 1;
+        }
+
+        .guide-info h3 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1em;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+
+        .guide-info p {
+            font-size: 0.9em;
+            color: #cccccc;
+            line-height: 1.4;
+        }
+
+        .guide-link {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 15px;
+            border: 1px solid #ffffff;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .guide-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
             transform: translateY(-2px);
         }
 
-        .category-title i {
-            margin-right: 15px;
-            font-size: 0.9em;
+        .guide-link i {
+            font-size: 1.2em;
         }
     </style>
 </head>
@@ -334,291 +470,151 @@
         <p class="terminal-prompt">gotr00t@guides:~$ Loading knowledge base...</p>
     </div>
 
-    <!-- Pentesting & Red Team Category -->
-    <div class="category-section">
-        <h2 class="category-title">
-            <i class="fas fa-user-secret"></i>
-            Penetration Testing & Red Team
-        </h2>
-        <div class="guides-grid">
-        <div class="guide-card">
-            <div class="impact-badge">ROADMAP</div>
-            <div class="guide-icon">
-                <i class="fas fa-route"></i>
+    <!-- Categories Container -->
+    <div class="categories-container">
+        
+        <!-- Pentesting & Red Team Category -->
+        <div class="category-dropdown">
+            <div class="category-header" onclick="toggleCategory('pentesting')">
+                <div class="category-info">
+                    <i class="fas fa-user-secret"></i>
+                    <span class="category-name">Penetration Testing & Red Team</span>
+                    <span class="guide-count">(5 guides)</span>
+                </div>
+                <i class="fas fa-chevron-down dropdown-arrow" id="arrow-pentesting"></i>
             </div>
-            <h2 class="guide-title">Penetration Testing Roadmap</h2>
-            <p class="guide-description">
-                A comprehensive roadmap for aspiring penetration testers, covering everything from networking fundamentals to advanced exploitation techniques.
-            </p>
-            <ul class="guide-topics">
-                <li>Computer Fundamentals & Networking</li>
-                <li>Operating Systems (Windows, Linux, MacOS)</li>
-                <li>Programming Languages (Python, PowerShell, Bash)</li>
-                <li>Web Application Security</li>
-                <li>Network Security & Protocols</li>
-                <li>Vulnerability Assessment</li>
-                <li>Exploitation Techniques</li>
-                <li>Post-Exploitation & Persistence</li>
-                <li>Reporting & Documentation</li>
-                <li>Certification Paths (OSCP, CEH, CISSP)</li>
-            </ul>
-            <a href="https://github.com/gotr00t0day/Pentesting-Roadmap" class="github-link" target="_blank">
-                <i class="fab fa-github"></i> View Repository
-            </a>
+            <div class="category-content" id="pentesting">
+                <div class="guide-item">
+                    <i class="fas fa-route"></i>
+                    <div class="guide-info">
+                        <h3>Penetration Testing Roadmap</h3>
+                        <p>Comprehensive roadmap for aspiring penetration testers</p>
+                    </div>
+                    <a href="https://github.com/gotr00t0day/Pentesting-Roadmap" class="guide-link" target="_blank">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+                <div class="guide-item">
+                    <i class="fas fa-bug"></i>
+                    <div class="guide-info">
+                        <h3>Bug Bounty Hunting</h3>
+                        <p>Master the art of bug bounty hunting with methodologies and tools</p>
+                    </div>
+                    <a href="https://github.com/gotr00t0day/BugBounty" class="guide-link" target="_blank">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+                <div class="guide-item">
+                    <i class="fas fa-envelope"></i>
+                    <div class="guide-info">
+                        <h3>SMTP & Postfix Pentesting</h3>
+                        <p>Deep dive into SMTP server security and email system exploitation</p>
+                    </div>
+                    <a href="https://github.com/gotr00t0day/SMTP-PostFix-Pentesting" class="guide-link" target="_blank">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+                <div class="guide-item">
+                    <i class="fas fa-server"></i>
+                    <div class="guide-info">
+                        <h3>Active Directory Pentesting</h3>
+                        <p>Comprehensive guide for penetration testing Active Directory environments</p>
+                    </div>
+                    <a href="https://github.com/gotr00t0day/Active_Directory_Roadmap" class="guide-link" target="_blank">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+                <div class="guide-item">
+                    <i class="fas fa-crosshairs"></i>
+                    <div class="guide-info">
+                        <h3>Red Team Operations</h3>
+                        <p>Professional red team engagements following MITRE ATT&CK methodology</p>
+                    </div>
+                    <a href="https://github.com/gotr00t0day/RedTeam-Ops-Guide" class="guide-link" target="_blank">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+            </div>
         </div>
 
-        <div class="guide-card">
-            <div class="impact-badge">BUG BOUNTY</div>
-            <div class="guide-icon">
-                <i class="fas fa-bug"></i>
+        <!-- Operating Systems Category -->
+        <div class="category-dropdown">
+            <div class="category-header" onclick="toggleCategory('systems')">
+                <div class="category-info">
+                    <i class="fas fa-desktop"></i>
+                    <span class="category-name">Operating Systems</span>
+                    <span class="guide-count">(3 guides)</span>
+                </div>
+                <i class="fas fa-chevron-down dropdown-arrow" id="arrow-systems"></i>
             </div>
-            <h2 class="guide-title">Bug Bounty Hunting</h2>
-            <p class="guide-description">
-                Master the art of bug bounty hunting with methodologies, tools, and techniques used by top researchers to find vulnerabilities.
-            </p>
-            <ul class="guide-topics">
-                <li>Reconnaissance & Information Gathering</li>
-                <li>Subdomain Enumeration</li>
-                <li>Web Application Testing</li>
-                <li>API Security Testing</li>
-                <li>Mobile Application Testing</li>
-                <li>Common Vulnerability Types</li>
-                <li>Automation & Tooling</li>
-                <li>Report Writing & Communication</li>
-                <li>Bug Bounty Platforms</li>
-                <li>Legal & Ethical Considerations</li>
-            </ul>
-            <a href="https://github.com/gotr00t0day/BugBounty" class="github-link" target="_blank">
-                <i class="fab fa-github"></i> View Repository
-            </a>
+            <div class="category-content" id="systems">
+                <div class="guide-item">
+                    <i class="fab fa-windows"></i>
+                    <div class="guide-info">
+                        <h3>Windows Security & Hardening</h3>
+                        <p>Comprehensive guide for securing Windows environments</p>
+                    </div>
+                    <a href="https://github.com/gotr00t0day/Windows-Security-Guide" class="guide-link" target="_blank">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+                <div class="guide-item">
+                    <i class="fab fa-linux"></i>
+                    <div class="guide-info">
+                        <h3>Linux Security & Administration</h3>
+                        <p>Essential guide for Linux system administrators and security professionals</p>
+                    </div>
+                    <a href="https://github.com/gotr00t0day/Linux-Security-Guide" class="guide-link" target="_blank">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+                <div class="guide-item">
+                    <i class="fas fa-cog"></i>
+                    <div class="guide-info">
+                        <h3>Windows Persistence</h3>
+                        <p>Advanced techniques for maintaining persistence on Windows systems</p>
+                    </div>
+                    <a href="https://github.com/gotr00t0day/Windows-Persistence" class="guide-link" target="_blank">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+            </div>
         </div>
 
-        <div class="guide-card">
-            <div class="impact-badge">SMTP</div>
-            <div class="guide-icon">
-                <i class="fas fa-envelope"></i>
+        <!-- Programming & Development Category -->
+        <div class="category-dropdown">
+            <div class="category-header" onclick="toggleCategory('programming')">
+                <div class="category-info">
+                    <i class="fas fa-code"></i>
+                    <span class="category-name">Programming & Development</span>
+                    <span class="guide-count">(2 guides)</span>
+                </div>
+                <i class="fas fa-chevron-down dropdown-arrow" id="arrow-programming"></i>
             </div>
-            <h2 class="guide-title">SMTP & Postfix Pentesting</h2>
-            <p class="guide-description">
-                Deep dive into SMTP server security, Postfix configuration vulnerabilities, and email system exploitation techniques.
-            </p>
-            <ul class="guide-topics">
-                <li>SMTP Protocol Fundamentals</li>
-                <li>Postfix Configuration Analysis</li>
-                <li>Email Header Injection</li>
-                <li>SMTP Relay Attacks</li>
-                <li>User Enumeration Techniques</li>
-                <li>Email Spoofing & Phishing</li>
-                <li>SPF, DKIM, DMARC Bypass</li>
-                <li>SMTP Smuggling Attacks</li>
-                <li>Mail Server Reconnaissance</li>
-                <li>Exploitation Tools & Scripts</li>
-            </ul>
-            <a href="https://github.com/gotr00t0day/SMTP-PostFix-Pentesting" class="github-link" target="_blank">
-                <i class="fab fa-github"></i> View Repository
-            </a>
+            <div class="category-content" id="programming">
+                <div class="guide-item">
+                    <i class="fab fa-python"></i>
+                    <div class="guide-info">
+                        <h3>Python for Security</h3>
+                        <p>Learn Python programming specifically for cybersecurity applications</p>
+                    </div>
+                    <a href="https://github.com/gotr00t0day/Python-Security-Guide" class="guide-link" target="_blank">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+                <div class="guide-item">
+                    <i class="fas fa-terminal"></i>
+                    <div class="guide-info">
+                        <h3>PowerShell for Security</h3>
+                        <p>Master PowerShell for both offensive and defensive security operations</p>
+                    </div>
+                    <a href="https://github.com/gotr00t0day/PowerShell-Security-Guide" class="guide-link" target="_blank">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+            </div>
         </div>
 
-        <div class="guide-card">
-            <div class="impact-badge">ACTIVE DIRECTORY</div>
-            <div class="guide-icon">
-                <i class="fas fa-server"></i>
-            </div>
-            <h2 class="guide-title">Active Directory Pentesting</h2>
-            <p class="guide-description">
-                Comprehensive guide for penetration testing Active Directory environments, covering reconnaissance, enumeration, attacks, and persistence techniques.
-            </p>
-            <ul class="guide-topics">
-                <li>AD Fundamentals & Core Components</li>
-                <li>External & Internal Reconnaissance</li>
-                <li>LDAP & SMB Enumeration</li>
-                <li>Password Spraying & Brute Force</li>
-                <li>Kerberoasting & ASREPRoasting</li>
-                <li>Privilege Escalation Techniques</li>
-                <li>Lateral Movement & Pass-the-Hash</li>
-                <li>Golden/Silver Ticket Attacks</li>
-                <li>Persistence & Defense Evasion</li>
-                <li>Detection & Countermeasures</li>
-            </ul>
-            <a href="https://github.com/gotr00t0day/Active_Directory_Roadmap" class="github-link" target="_blank">
-                <i class="fab fa-github"></i> View Repository
-            </a>
-        </div>
-
-        <div class="guide-card">
-            <div class="impact-badge">RED TEAM</div>
-            <div class="guide-icon">
-                <i class="fas fa-crosshairs"></i>
-            </div>
-            <h2 class="guide-title">Red Team Operations</h2>
-            <p class="guide-description">
-                Comprehensive framework for conducting professional red team engagements, simulating real-world adversary tactics following MITRE ATT&CK methodology.
-            </p>
-            <ul class="guide-topics">
-                <li>Red Team Methodology & Planning</li>
-                <li>OSINT & Reconnaissance Techniques</li>
-                <li>Weaponization & Payload Development</li>
-                <li>Spear Phishing & Social Engineering</li>
-                <li>Command & Control Infrastructure</li>
-                <li>Lateral Movement & Persistence</li>
-                <li>Data Exfiltration & Covert Channels</li>
-                <li>OPSEC & Attribution Avoidance</li>
-                <li>Anti-Forensics & Covering Tracks</li>
-                <li>Legal & Ethical Guidelines</li>
-            </ul>
-            <a href="https://github.com/gotr00t0day/RedTeam-Ops-Guide" class="github-link" target="_blank">
-                <i class="fab fa-github"></i> View Repository
-            </a>
-        </div>
-        </div>
-    </div>
-
-    <!-- Operating Systems Category -->
-    <div class="category-section">
-        <h2 class="category-title">
-            <i class="fas fa-desktop"></i>
-            Operating Systems
-        </h2>
-        <div class="guides-grid">
-        <div class="guide-card">
-            <div class="impact-badge">WINDOWS</div>
-            <div class="guide-icon">
-                <i class="fab fa-windows"></i>
-            </div>
-            <h2 class="guide-title">Windows Security & Hardening</h2>
-            <p class="guide-description">
-                Comprehensive guide for securing Windows environments, covering hardening techniques, group policies, and advanced security configurations.
-            </p>
-            <ul class="guide-topics">
-                <li>Windows Security Architecture</li>
-                <li>Group Policy Management</li>
-                <li>User Account Control (UAC)</li>
-                <li>Windows Firewall Configuration</li>
-                <li>BitLocker & Drive Encryption</li>
-                <li>Windows Defender Configuration</li>
-                <li>Event Logging & Monitoring</li>
-                <li>PowerShell Security</li>
-                <li>Registry Security</li>
-                <li>Compliance & Benchmarks</li>
-            </ul>
-            <a href="https://github.com/gotr00t0day/Windows-Security-Guide" class="github-link" target="_blank">
-                <i class="fab fa-github"></i> View Repository
-            </a>
-        </div>
-
-        <div class="guide-card">
-            <div class="impact-badge">LINUX</div>
-            <div class="guide-icon">
-                <i class="fab fa-linux"></i>
-            </div>
-            <h2 class="guide-title">Linux Security & Administration</h2>
-            <p class="guide-description">
-                Essential guide for Linux system administrators and security professionals, covering hardening, monitoring, and incident response.
-            </p>
-            <ul class="guide-topics">
-                <li>Linux Security Fundamentals</li>
-                <li>User & Permission Management</li>
-                <li>Firewall Configuration (iptables/ufw)</li>
-                <li>System Hardening Techniques</li>
-                <li>Log Analysis & SIEM Integration</li>
-                <li>Intrusion Detection Systems</li>
-                <li>Container Security (Docker/K8s)</li>
-                <li>Kernel Security & SELinux</li>
-                <li>Network Security Configuration</li>
-                <li>Incident Response & Forensics</li>
-            </ul>
-            <a href="https://github.com/gotr00t0day/Linux-Security-Guide" class="github-link" target="_blank">
-                <i class="fab fa-github"></i> View Repository
-            </a>
-        </div>
-
-        <div class="guide-card">
-            <div class="impact-badge">PERSISTENCE</div>
-            <div class="guide-icon">
-                <i class="fas fa-windows"></i>
-            </div>
-            <h2 class="guide-title">Windows Persistence</h2>
-            <p class="guide-description">
-                Advanced techniques for maintaining persistence on Windows systems during red team operations and penetration testing.
-            </p>
-            <ul class="guide-topics">
-                <li>Registry-based Persistence</li>
-                <li>Service Persistence</li>
-                <li>Scheduled Tasks</li>
-                <li>WMI Event Subscriptions</li>
-                <li>DLL Hijacking</li>
-                <li>COM Object Hijacking</li>
-                <li>Startup Folder Persistence</li>
-                <li>BITS Jobs</li>
-                <li>PowerShell Profile Backdoors</li>
-                <li>Detection Evasion Techniques</li>
-            </ul>
-            <a href="https://github.com/gotr00t0day/Windows-Persistence" class="github-link" target="_blank">
-                <i class="fab fa-github"></i> View Repository
-            </a>
-        </div>
-        </div>
-    </div>
-
-    <!-- Programming & Development Category -->
-    <div class="category-section">
-        <h2 class="category-title">
-            <i class="fas fa-code"></i>
-            Programming & Development
-        </h2>
-        <div class="guides-grid">
-        <div class="guide-card">
-            <div class="impact-badge">PYTHON</div>
-            <div class="guide-icon">
-                <i class="fab fa-python"></i>
-            </div>
-            <h2 class="guide-title">Python for Security</h2>
-            <p class="guide-description">
-                Learn Python programming specifically for cybersecurity applications, including automation, exploit development, and security tool creation.
-            </p>
-            <ul class="guide-topics">
-                <li>Python Security Libraries</li>
-                <li>Network Programming & Sockets</li>
-                <li>Web Scraping & Automation</li>
-                <li>Cryptography & Hashing</li>
-                <li>Exploit Development Basics</li>
-                <li>API Security Testing</li>
-                <li>Database Security Scripts</li>
-                <li>Log Analysis & Parsing</li>
-                <li>Custom Security Tools</li>
-                <li>Malware Analysis Scripts</li>
-            </ul>
-            <a href="https://github.com/gotr00t0day/Python-Security-Guide" class="github-link" target="_blank">
-                <i class="fab fa-github"></i> View Repository
-            </a>
-        </div>
-
-        <div class="guide-card">
-            <div class="impact-badge">POWERSHELL</div>
-            <div class="guide-icon">
-                <i class="fas fa-terminal"></i>
-            </div>
-            <h2 class="guide-title">PowerShell for Security</h2>
-            <p class="guide-description">
-                Master PowerShell for both offensive and defensive security operations, including automation, forensics, and system administration.
-            </p>
-            <ul class="guide-topics">
-                <li>PowerShell Security Features</li>
-                <li>Active Directory Automation</li>
-                <li>Windows Forensics Scripts</li>
-                <li>Security Monitoring & Alerts</li>
-                <li>Event Log Analysis</li>
-                <li>Network Security Scripts</li>
-                <li>Malware Detection Scripts</li>
-                <li>System Hardening Automation</li>
-                <li>Incident Response Tools</li>
-                <li>Security Baseline Scripts</li>
-            </ul>
-            <a href="https://github.com/gotr00t0day/PowerShell-Security-Guide" class="github-link" target="_blank">
-                <i class="fab fa-github"></i> View Repository
-            </a>
-        </div>
-        </div>
     </div>
 
     <div class="warning-box">
@@ -627,14 +623,28 @@
     </div>
 
     <script>
-        // Add interactive effects
-        document.querySelectorAll('.guide-card').forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                card.style.borderColor = '#cccccc';
+        // Toggle dropdown categories
+        function toggleCategory(categoryId) {
+            const content = document.getElementById(categoryId);
+            const arrow = document.getElementById('arrow-' + categoryId);
+            
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                arrow.classList.remove('rotated');
+            } else {
+                content.classList.add('active');
+                arrow.classList.add('rotated');
+            }
+        }
+
+        // Add interactive effects to guide items
+        document.querySelectorAll('.guide-item').forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                item.style.borderLeftColor = '#ffffff';
             });
             
-            card.addEventListener('mouseleave', () => {
-                card.style.borderColor = '#ffffff';
+            item.addEventListener('mouseleave', () => {
+                item.style.borderLeftColor = 'transparent';
             });
         });
 
@@ -642,6 +652,12 @@
         setTimeout(() => {
             document.querySelector('.terminal-prompt').textContent = 'gotr00t@guides:~$ Knowledge base loaded. Ready for deployment.';
         }, 2000);
+
+        // Add border-left animation on hover
+        document.querySelectorAll('.guide-item').forEach(item => {
+            item.style.borderLeft = '4px solid transparent';
+            item.style.transition = 'all 0.3s ease';
+        });
     </script>
 </body>
 </html> 
