@@ -273,6 +273,50 @@
         .terminal-prompt::before {
             content: "";
         }
+
+        .category-section {
+            margin-bottom: 60px;
+        }
+
+        .category-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.2em;
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 2px solid #ffffff;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-title::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .category-title:hover::before {
+            left: 100%;
+        }
+
+        .category-title:hover {
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .category-title i {
+            margin-right: 15px;
+            font-size: 0.9em;
+        }
     </style>
 </head>
 
@@ -290,9 +334,13 @@
         <p class="terminal-prompt">gotr00t@guides:~$ Loading knowledge base...</p>
     </div>
 
-
-
-    <div class="guides-grid">
+    <!-- Pentesting & Red Team Category -->
+    <div class="category-section">
+        <h2 class="category-title">
+            <i class="fas fa-user-secret"></i>
+            Penetration Testing & Red Team
+        </h2>
+        <div class="guides-grid">
         <div class="guide-card">
             <div class="impact-badge">ROADMAP</div>
             <div class="guide-icon">
@@ -372,32 +420,6 @@
         </div>
 
         <div class="guide-card">
-            <div class="impact-badge">PERSISTENCE</div>
-            <div class="guide-icon">
-                <i class="fas fa-windows"></i>
-            </div>
-            <h2 class="guide-title">Windows Persistence</h2>
-            <p class="guide-description">
-                Advanced techniques for maintaining persistence on Windows systems during red team operations and penetration testing.
-            </p>
-            <ul class="guide-topics">
-                <li>Registry-based Persistence</li>
-                <li>Service Persistence</li>
-                <li>Scheduled Tasks</li>
-                <li>WMI Event Subscriptions</li>
-                <li>DLL Hijacking</li>
-                <li>COM Object Hijacking</li>
-                <li>Startup Folder Persistence</li>
-                <li>BITS Jobs</li>
-                <li>PowerShell Profile Backdoors</li>
-                <li>Detection Evasion Techniques</li>
-            </ul>
-            <a href="https://github.com/gotr00t0day/Windows-Persistence" class="github-link" target="_blank">
-                <i class="fab fa-github"></i> View Repository
-            </a>
-        </div>
-
-        <div class="guide-card">
             <div class="impact-badge">ACTIVE DIRECTORY</div>
             <div class="guide-icon">
                 <i class="fas fa-server"></i>
@@ -447,6 +469,155 @@
             <a href="https://github.com/gotr00t0day/RedTeam-Ops-Guide" class="github-link" target="_blank">
                 <i class="fab fa-github"></i> View Repository
             </a>
+        </div>
+        </div>
+    </div>
+
+    <!-- Operating Systems Category -->
+    <div class="category-section">
+        <h2 class="category-title">
+            <i class="fas fa-desktop"></i>
+            Operating Systems
+        </h2>
+        <div class="guides-grid">
+        <div class="guide-card">
+            <div class="impact-badge">WINDOWS</div>
+            <div class="guide-icon">
+                <i class="fab fa-windows"></i>
+            </div>
+            <h2 class="guide-title">Windows Security & Hardening</h2>
+            <p class="guide-description">
+                Comprehensive guide for securing Windows environments, covering hardening techniques, group policies, and advanced security configurations.
+            </p>
+            <ul class="guide-topics">
+                <li>Windows Security Architecture</li>
+                <li>Group Policy Management</li>
+                <li>User Account Control (UAC)</li>
+                <li>Windows Firewall Configuration</li>
+                <li>BitLocker & Drive Encryption</li>
+                <li>Windows Defender Configuration</li>
+                <li>Event Logging & Monitoring</li>
+                <li>PowerShell Security</li>
+                <li>Registry Security</li>
+                <li>Compliance & Benchmarks</li>
+            </ul>
+            <a href="https://github.com/gotr00t0day/Windows-Security-Guide" class="github-link" target="_blank">
+                <i class="fab fa-github"></i> View Repository
+            </a>
+        </div>
+
+        <div class="guide-card">
+            <div class="impact-badge">LINUX</div>
+            <div class="guide-icon">
+                <i class="fab fa-linux"></i>
+            </div>
+            <h2 class="guide-title">Linux Security & Administration</h2>
+            <p class="guide-description">
+                Essential guide for Linux system administrators and security professionals, covering hardening, monitoring, and incident response.
+            </p>
+            <ul class="guide-topics">
+                <li>Linux Security Fundamentals</li>
+                <li>User & Permission Management</li>
+                <li>Firewall Configuration (iptables/ufw)</li>
+                <li>System Hardening Techniques</li>
+                <li>Log Analysis & SIEM Integration</li>
+                <li>Intrusion Detection Systems</li>
+                <li>Container Security (Docker/K8s)</li>
+                <li>Kernel Security & SELinux</li>
+                <li>Network Security Configuration</li>
+                <li>Incident Response & Forensics</li>
+            </ul>
+            <a href="https://github.com/gotr00t0day/Linux-Security-Guide" class="github-link" target="_blank">
+                <i class="fab fa-github"></i> View Repository
+            </a>
+        </div>
+
+        <div class="guide-card">
+            <div class="impact-badge">PERSISTENCE</div>
+            <div class="guide-icon">
+                <i class="fas fa-windows"></i>
+            </div>
+            <h2 class="guide-title">Windows Persistence</h2>
+            <p class="guide-description">
+                Advanced techniques for maintaining persistence on Windows systems during red team operations and penetration testing.
+            </p>
+            <ul class="guide-topics">
+                <li>Registry-based Persistence</li>
+                <li>Service Persistence</li>
+                <li>Scheduled Tasks</li>
+                <li>WMI Event Subscriptions</li>
+                <li>DLL Hijacking</li>
+                <li>COM Object Hijacking</li>
+                <li>Startup Folder Persistence</li>
+                <li>BITS Jobs</li>
+                <li>PowerShell Profile Backdoors</li>
+                <li>Detection Evasion Techniques</li>
+            </ul>
+            <a href="https://github.com/gotr00t0day/Windows-Persistence" class="github-link" target="_blank">
+                <i class="fab fa-github"></i> View Repository
+            </a>
+        </div>
+        </div>
+    </div>
+
+    <!-- Programming & Development Category -->
+    <div class="category-section">
+        <h2 class="category-title">
+            <i class="fas fa-code"></i>
+            Programming & Development
+        </h2>
+        <div class="guides-grid">
+        <div class="guide-card">
+            <div class="impact-badge">PYTHON</div>
+            <div class="guide-icon">
+                <i class="fab fa-python"></i>
+            </div>
+            <h2 class="guide-title">Python for Security</h2>
+            <p class="guide-description">
+                Learn Python programming specifically for cybersecurity applications, including automation, exploit development, and security tool creation.
+            </p>
+            <ul class="guide-topics">
+                <li>Python Security Libraries</li>
+                <li>Network Programming & Sockets</li>
+                <li>Web Scraping & Automation</li>
+                <li>Cryptography & Hashing</li>
+                <li>Exploit Development Basics</li>
+                <li>API Security Testing</li>
+                <li>Database Security Scripts</li>
+                <li>Log Analysis & Parsing</li>
+                <li>Custom Security Tools</li>
+                <li>Malware Analysis Scripts</li>
+            </ul>
+            <a href="https://github.com/gotr00t0day/Python-Security-Guide" class="github-link" target="_blank">
+                <i class="fab fa-github"></i> View Repository
+            </a>
+        </div>
+
+        <div class="guide-card">
+            <div class="impact-badge">POWERSHELL</div>
+            <div class="guide-icon">
+                <i class="fas fa-terminal"></i>
+            </div>
+            <h2 class="guide-title">PowerShell for Security</h2>
+            <p class="guide-description">
+                Master PowerShell for both offensive and defensive security operations, including automation, forensics, and system administration.
+            </p>
+            <ul class="guide-topics">
+                <li>PowerShell Security Features</li>
+                <li>Active Directory Automation</li>
+                <li>Windows Forensics Scripts</li>
+                <li>Security Monitoring & Alerts</li>
+                <li>Event Log Analysis</li>
+                <li>Network Security Scripts</li>
+                <li>Malware Detection Scripts</li>
+                <li>System Hardening Automation</li>
+                <li>Incident Response Tools</li>
+                <li>Security Baseline Scripts</li>
+            </ul>
+            <a href="https://github.com/gotr00t0day/PowerShell-Security-Guide" class="github-link" target="_blank">
+                <i class="fab fa-github"></i> View Repository
+            </a>
+        </div>
         </div>
     </div>
 
