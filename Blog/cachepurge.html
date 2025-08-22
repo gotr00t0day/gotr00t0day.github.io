@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unauthorized Cache Purge Access - gotr00t Security Blog</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(45deg, #000000, #0a0a0a, #111111);
+            color: #ffffff;
+            font-family: 'Share Tech Mono', monospace;
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        /* Animated binary background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.15) 1px, transparent 0);
+            background-size: 20px 20px;
+            animation: binaryFlow 10s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes binaryFlow {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(20px); }
+        }
+
+        /* Navigation */
+        .nav-header {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #ffffff;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 12px 20px;
+            border: 1px solid transparent;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #ffffff;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #ffffff;
+            color: #ffffff;
+        }
+
+        .nav-link i {
+            color: #ffffff;
+            width: 16px;
+            text-align: center;
+        }
+
+        /* Back button */
+        .back-nav {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .back-link {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 12px 20px;
+            border: 1px solid #ffffff;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* Main content */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            margin-top: 20px;
+            margin-bottom: 40px;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+        }
+
+        .terminal-prompt {
+            color: #ffffff;
+            font-weight: bold;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 3em;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            margin-bottom: 30px;
+            animation: glow 2s ease-in-out infinite alternate;
+            text-align: center;
+        }
+
+        h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8em;
+            color: #ffffff;
+            margin: 30px 0 20px 0;
+            border-bottom: 2px solid #ffffff;
+            padding-bottom: 10px;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
+            to { text-shadow: 0 0 30px rgba(255, 255, 255, 0.8); }
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: #ffffff;
+            font-size: 1.1em;
+        }
+
+        strong {
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        em {
+            color: #cccccc;
+            font-style: italic;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        ol, ul {
+            margin: 20px 0;
+            padding-left: 30px;
+        }
+
+        li {
+            margin: 10px 0;
+            color: #ffffff;
+        }
+
+        /* Code/command styling */
+        code {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Share Tech Mono', monospace;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Image placeholder styling */
+        figure {
+            margin: 30px 0;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        figure img {
+            max-width: 100%;
+            border-radius: 8px;
+            border: 1px solid #ffffff;
+        }
+
+        /* Image placeholder for missing images */
+        .image-placeholder {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px dashed #ffffff;
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            color: #cccccc;
+            margin: 30px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .image-placeholder i {
+            font-size: 3em;
+            opacity: 0.5;
+        }
+
+        /* Impact indicators */
+        .impact-list {
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid #ffffff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .impact-list p {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkmark {
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        /* Final message styling */
+        .final-message {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid #ffffff;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            margin: 40px 0;
+            font-weight: bold;
+            animation: pulse 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { box-shadow: 0 0 15px rgba(255, 255, 255, 0.3); }
+            to { box-shadow: 0 0 25px rgba(255, 255, 255, 0.6); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .nav-link {
+                padding: 10px 15px;
+                font-size: 0.9em;
+            }
+            
+            h1 {
+                font-size: 2.2em;
+            }
+            
+            h2 {
+                font-size: 1.5em;
+            }
+            
+            .container {
+                margin: 10px;
+                padding: 30px 15px;
+            }
+            
+            ol, ul {
+                padding-left: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="nav-header">
+        <div class="nav-container">
+            <ul class="nav-links">
+                <li><a href="../index.html" class="nav-link"><i class="fas fa-home"></i>Home</a></li>
+                <li><a href="../poc.html" class="nav-link"><i class="fas fa-bug"></i>PoC</a></li>
+                <li><a href="../projects.html" class="nav-link"><i class="fas fa-code"></i>Projects</a></li>
+                <li><a href="../guides.html" class="nav-link"><i class="fas fa-book"></i>Guides</a></li>
+                <li><a href="../blog.html" class="nav-link active"><i class="fas fa-pen-nib"></i>Blog</a></li>
+                <li><a href="../contact.html" class="nav-link"><i class="fas fa-envelope"></i>Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Back to blog link -->
+    <div class="back-nav">
+        <a href="../blog.html" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            Back to Blog
+        </a>
+    </div>
+
+    <div class="container">
+        <div class="terminal-prompt">gotr00t@blog:~/cachepurge$</div>
+        
+        <h1>Unauthorized Cache Purge Access</h1>
+
+        <h2>The PURGE HTTP method is accessible without authentication</h2>
+
+        <p><strong>Let's start by explaining cache purging.</strong></p>
+
+        <p>Cache purging is a legitimate mechanism that allows removal of cached content from CDN/cache servers. It's designed to:</p>
+
+        <ol>
+            <li>Clear outdated content</li>
+            <li>Force cache refresh</li>
+            <li>Remove specific files from cache</li>
+            <li>Update content immediately</li>
+        </ol>
+
+        <p>I decided to check if the purge HTTP method was possible. With a simple curl command you can check the response of the server.</p>
+
+        <p><code>curl -X PURGE https://target.com</code></p>
+
+        <div class="image-placeholder">
+            <i class="fas fa-image"></i>
+            <p>Screenshot showing PURGE method response with status "ok" and ID</p>
+            <em>Original: Screenshot 2025-08-21 at 1.44.03 PM.png</em>
+        </div>
+
+        <p>As you can see in the image, it returned a status of ok with an id, this means the PURGE method is available without authentication. What does this even mean and what can I do with this? If the method is available anyone can clear the website's cache.</p>
+
+        <p><strong>What's the impact?</strong></p>
+
+        <ol>
+            <li>Forces all requests to origin server</li>
+            <li>Causes severe performance degradation</li>
+            <li>Potential server overload and crash</li>
+            <li>Affects ALL website visitors</li>
+        </ol>
+
+        <p>Further testing reveals that it works on multiple endpoints. This is an automated script I wrote in python to check multiple endpoints, the wildcard <code>*</code> means you can purge all cached content on that specific endpoint.</p>
+
+        <div class="image-placeholder">
+            <i class="fas fa-terminal"></i>
+            <p>Python script output showing successful PURGE requests on multiple endpoints</p>
+            <em>Original: Screenshot 2025-08-21 at 1.47.43 PM.png</em>
+        </div>
+
+        <p><strong>Summary:</strong> Cache purge vulnerability allows unauthorized clearing of website cache, causing:</p>
+
+        <div class="impact-list">
+            <p><span class="checkmark">✅</span> Immediate DoS (performance degradation)</p>
+            <p><span class="checkmark">✅</span> Economic damage (increased costs)</p>
+            <p><span class="checkmark">✅</span> Business disruption (lost sales)</p>
+            <p><span class="checkmark">✅</span> Competitive harm (advantage to competitors)</p>
+        </div>
+
+        <p>This is a SOLID bug bounty finding with clear business impact and easy reproduction!</p>
+
+        <div class="final-message">
+            <h1>HAPPY HACKING!</h1>
+        </div>
+    </div>
+</body>
+
+</html>
