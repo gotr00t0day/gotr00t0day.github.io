@@ -84,28 +84,63 @@
             margin-bottom: 10px;
         }
 
-        .nav-back {
-            display: inline-block;
+        /* Navigation */
+        .nav-header {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #ffffff;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-link {
             color: #ffffff;
             text-decoration: none;
-            padding: 12px 25px;
-            border: 2px solid #ffffff;
+            padding: 12px 20px;
+            border: 1px solid transparent;
             border-radius: 5px;
-            margin-bottom: 30px;
             transition: all 0.3s ease;
-            background: rgba(0, 0, 0, 0.8);
+            text-transform: uppercase;
+            letter-spacing: 1px;
             font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .nav-back:hover {
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #ffffff;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
             background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
-            transform: translateY(-3px);
+            border-color: #ffffff;
+            color: #ffffff;
         }
 
-        .nav-back i {
+        .nav-link i {
             color: #ffffff;
-            margin-right: 8px;
             width: 16px;
             text-align: center;
         }
@@ -289,43 +324,7 @@
             51%, 100% { opacity: 0.7; }
         }
 
-        .stats-section {
-            text-align: center;
-            margin-bottom: 50px;
-            padding: 30px;
-            background: rgba(0, 0, 0, 0.8);
-            border-radius: 15px;
-            border: 2px solid #ffffff;
-        }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
-            margin-top: 20px;
-        }
-
-        .stat-item {
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            border: 1px solid #333;
-        }
-
-        .stat-number {
-            font-family: 'Orbitron', monospace;
-            font-size: 2.5em;
-            color: #ffffff;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .stat-label {
-            color: #cccccc;
-            font-size: 0.9em;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
 
         /* Responsive design */
         @media (max-width: 768px) {
@@ -369,41 +368,27 @@
 </head>
 
 <body>
-    <div class="header">
-        <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap;">
-                            <a href="index.html" class="nav-back"><i class="fas fa-home"></i>Home</a>
-                <a href="poc.html" class="nav-back" style="background: rgba(255, 255, 255, 0.2);"><i class="fas fa-bug"></i>PoC</a>
-                <a href="projects.html" class="nav-back"><i class="fas fa-code"></i>Projects</a>
-                <a href="guides.html" class="nav-back"><i class="fas fa-book"></i>Guides</a>
-                <a href="blog.html" class="nav-back"><i class="fas fa-pen-nib"></i>Blog</a>
-                <a href="contact.html" class="nav-back"><i class="fas fa-envelope"></i>Contact</a>
+    <!-- Navigation -->
+    <nav class="nav-header">
+        <div class="nav-container">
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i>Home</a></li>
+                <li><a href="poc.html" class="nav-link active"><i class="fas fa-bug"></i>PoC</a></li>
+                <li><a href="projects.html" class="nav-link"><i class="fas fa-code"></i>Projects</a></li>
+                <li><a href="guides.html" class="nav-link"><i class="fas fa-book"></i>Guides</a></li>
+                <li><a href="blog.html" class="nav-link"><i class="fas fa-pen-nib"></i>Blog</a></li>
+                <li><a href="contact.html" class="nav-link"><i class="fas fa-envelope"></i>Contact</a></li>
+            </ul>
         </div>
+    </nav>
+
+    <div class="header">
         <h1>CVE Arsenal</h1>
         <p class="subtitle">Critical Vulnerability Research & Exploitation</p>
         <p class="terminal-prompt">gotr00t@arsenal:~$ Loading discovered vulnerabilities...</p>
     </div>
 
-    <div class="stats-section">
-        <h2 style="color: #ffffff; margin-bottom: 20px; font-family: 'Orbitron', monospace;">Security Research Statistics</h2>
-        <div class="stats-grid">
-            <div class="stat-item">
-                <div class="stat-number">16</div>
-                <div class="stat-label">CVEs & PoCs</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">30+</div>
-                <div class="stat-label">GitHub Stars</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">9.8</div>
-                <div class="stat-label">Max CVSS Score</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">5</div>
-                <div class="stat-label">Research Tools</div>
-            </div>
-        </div>
-    </div>
+
 
     <div class="cve-grid">
         <!-- CVE-2024-4040 -->
