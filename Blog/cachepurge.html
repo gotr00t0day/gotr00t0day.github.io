@@ -102,78 +102,54 @@
             text-align: center;
         }
 
-        /* Back button */
-        .back-nav {
-            max-width: 1000px;
-            margin: 20px auto;
-            padding: 0 20px;
-        }
-
-        .back-link {
-            color: #ffffff;
-            text-decoration: none;
-            padding: 12px 20px;
-            border: 1px solid #ffffff;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.1);
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .back-link:hover {
-            background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
-            transform: translateY(-2px);
-        }
 
         /* Main content */
         .container {
             max-width: 1000px;
             margin: 0 auto;
             padding: 40px 20px;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            margin-top: 20px;
-            margin-bottom: 40px;
-            border: 2px solid #ffffff;
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            min-height: 100vh;
         }
 
         .terminal-prompt {
-            color: #ffffff;
-            font-weight: bold;
-            margin-bottom: 30px;
-            font-size: 1.1em;
+            color: #00ff00;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #00ff00;
         }
 
         h1 {
-            font-family: 'Orbitron', monospace;
+            font-family: 'Orbitron', sans-serif;
             font-size: 3em;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 20px;
             color: #ffffff;
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-            margin-bottom: 30px;
-            animation: glow 2s ease-in-out infinite alternate;
-            text-align: center;
+            letter-spacing: 3px;
         }
 
         h2 {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.8em;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2em;
+            font-weight: 700;
+            margin: 30px 0 15px 0;
             color: #ffffff;
-            margin: 30px 0 20px 0;
-            border-bottom: 2px solid #ffffff;
-            padding-bottom: 10px;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            letter-spacing: 2px;
         }
 
-        @keyframes glow {
-            from { text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
-            to { text-shadow: 0 0 30px rgba(255, 255, 255, 0.8); }
+        h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5em;
+            font-weight: 400;
+            margin: 25px 0 10px 0;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            letter-spacing: 1px;
         }
 
         p {
@@ -252,43 +228,6 @@
             opacity: 0.5;
         }
 
-        /* Impact indicators */
-        .impact-list {
-            background: rgba(255, 255, 255, 0.1);
-            border-left: 4px solid #ffffff;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 0 8px 8px 0;
-        }
-
-        .impact-list p {
-            margin: 10px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .checkmark {
-            color: #ffffff;
-            font-weight: bold;
-        }
-
-        /* Final message styling */
-        .final-message {
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid #ffffff;
-            border-radius: 10px;
-            padding: 25px;
-            text-align: center;
-            margin: 40px 0;
-            font-weight: bold;
-            animation: pulse 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes pulse {
-            from { box-shadow: 0 0 15px rgba(255, 255, 255, 0.3); }
-            to { box-shadow: 0 0 25px rgba(255, 255, 255, 0.6); }
-        }
 
         /* Responsive design */
         @media (max-width: 768px) {
@@ -297,27 +236,22 @@
                 flex-wrap: wrap;
                 justify-content: center;
             }
-            
+
             .nav-link {
                 padding: 10px 15px;
                 font-size: 0.9em;
             }
-            
+
             h1 {
-                font-size: 2.2em;
+                font-size: 2.5em;
             }
-            
+
             h2 {
-                font-size: 1.5em;
+                font-size: 1.8em;
             }
-            
+
             .container {
-                margin: 10px;
-                padding: 30px 15px;
-            }
-            
-            ol, ul {
-                padding-left: 20px;
+                padding: 20px 15px;
             }
         }
     </style>
@@ -338,16 +272,8 @@
         </div>
     </nav>
 
-    <!-- Back to blog link -->
-    <div class="back-nav">
-        <a href="../blog.html" class="back-link">
-            <i class="fas fa-arrow-left"></i>
-            Back to Blog
-        </a>
-    </div>
-
     <div class="container">
-        <div class="terminal-prompt">gotr00t@blog:~/cachepurge$</div>
+        <div class="terminal-prompt">gotr00t@cachepurge:~$</div>
         
         <h1>Unauthorized Cache Purge Access</h1>
 
@@ -389,20 +315,9 @@
             <img src="../Images/purge_patterns.png?v=2" alt="Python script output showing successful PURGE requests on multiple endpoints" />
         </figure>
 
-        <p><strong>Summary:</strong> Cache purge vulnerability allows unauthorized clearing of website cache, causing:</p>
-
-        <div class="impact-list">
-            <p><span class="checkmark">✅</span> Immediate DoS (performance degradation)</p>
-            <p><span class="checkmark">✅</span> Economic damage (increased costs)</p>
-            <p><span class="checkmark">✅</span> Business disruption (lost sales)</p>
-            <p><span class="checkmark">✅</span> Competitive harm (advantage to competitors)</p>
-        </div>
-
         <p>This is a SOLID bug bounty finding with clear business impact and easy reproduction!</p>
 
-        <div class="final-message">
-            <h1>HAPPY HACKING!</h1>
-        </div>
+        <h1>HAPPY HACKING</h1>
     </div>
 </body>
 
