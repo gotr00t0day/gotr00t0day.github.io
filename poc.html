@@ -391,6 +391,40 @@
 
 
     <div class="cve-grid">
+        <!-- CVE-2025-24893 -->
+        <div class="cve-card">
+            <div class="impact-badge">CRITICAL</div>
+            <div class="cve-header">
+                <div class="cve-id">CVE-2025-24893</div>
+                <div class="severity-badge critical">CVSS 9.8</div>
+            </div>
+            <div class="cve-title">XWiki Server-Side Template Injection RCE</div>
+            <div class="cve-description">
+                Critical Server-Side Template Injection (SSTI) vulnerability in XWiki via Groovy template injection in the SolrSearch RSS feed endpoint. Allows unauthenticated remote code execution with full system access.
+            </div>
+            <div class="cve-meta">
+                <div class="meta-item">
+                    <div class="meta-label">Year</div>
+                    <div class="meta-value">2025</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Type</div>
+                    <div class="meta-value">SSTI/RCE</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Impact</div>
+                    <div class="meta-value">Critical</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Stars</div>
+                    <div class="meta-value">⭐ 0</div>
+                </div>
+            </div>
+            <div class="cve-links">
+                <a href="https://github.com/gotr00t0day/CVE-2025-24893" target="_blank" class="cve-link">🔗 PoC Repository</a>
+            </div>
+        </div>
+
         <!-- CVE-2024-4040 -->
         <div class="cve-card">
             <div class="impact-badge">CRITICAL</div>
@@ -644,7 +678,7 @@
 
         // Simulate loading effect
         setTimeout(() => {
-            document.querySelector('.terminal-prompt').textContent = 'gotr00t@arsenal:~$ Vulnerability database loaded. 16 critical discoveries indexed.';
+            document.querySelector('.terminal-prompt').textContent = 'gotr00t@arsenal:~$ Vulnerability database loaded. 17 critical discoveries indexed.';
         }, 2000);
     </script>
 </body>
