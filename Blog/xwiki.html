@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="utf-8" />
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+		<title>CVE-2025-24893</title>
+	</head>
+<body>
+<h1>CVE-2025-24893</h1>
+
+<h2>Unauthenticated Remote Code Execution in XWiki via SolrSearch Macro</h2>
+
+<p><strong><em>What is XWiki?</em></strong></p>
+
+<p>XWiki is an open source wiki platform used by thousands of organizations worldwide for knowledge management and collaboration. It&#39;s built on Java and supports powerful features like macros and templates. Unfortunately, that power comes with a price.</p>
+
+<p><strong>AFFECTED VERSIONS</strong></p>
+
+<p>Multiple XWiki versions are vulnerable, particularly those with the SolrSearch </p>
+
+<p>macro enabled by default. If you&#39;re running XWiki in production, you need to </p>
+
+<p>check your version immediately.</p>
+
+<p>This isn&#39;t just a theoretical vulnerability. It&#39;s being actively exploited in </p>
+
+<p>the wild.</p>
+
+<p><strong><em>How can I exploit this vulnerability?</em></strong></p>
+
+<p>The vulnerability exists in XWiki&#39;s SolrSearch macro, specifically in how it </p>
+
+<p>handles RSS feed parameters. </p>
+
+<p>The vulnerable endpoint looks like this: </p>
+
+<pre><code>/xwiki/bin/view/Main/SolrSearch?media=rss&amp;text=</code></pre>
+
+<p>That innocent looking text parameter? It&#39;s the gateway to complete system compromise.</p>
+
+<p>The attack chain is surprisingly simple. An attacker crafts a malicious payload </p>
+
+<p>using Groovy template syntax. The payload looks like this:</p>
+
+<pre><code>}}}}{{{{async}}}}{{{{groovy}}}} 
+println, open bracket, execute command, close bracket
+{{{{/groovy}}}}{{{{/async}}}}</code></pre>
+
+<p>When XWiki processes this RSS request, it interprets the Groovy code on the server side. The result? Arbitrary command execution with the privileges of the XWiki application user and sometimes root. No credentials needed. No special access. Just a single HTTP GET request, and the attacker has a foothold.</p>
+
+<h2>Valhalla</h2>
+
+<p>What is Valhalla? Valhalla finds vulnerable devices on shodan, it can also scan a list of domains to find vulnerabilities. This is my go to tool to search shodan for vulnerabilities.</p>
+
+<figure><img src="Screenshot%202025-10-01%20at%202.49.49%E2%80%AFPM.png"/></figure>
+
+<p>As you can see in the image, I found a few Wiki instances that were vulnerable.</p>
+
+<h2>Shodan</h2>
+
+<figure><img src="Screenshot%202025-10-02%20at%209.43.56%E2%80%AFPM.png"/></figure>
+
+<h2>PoC</h2>
+
+<figure><img src="Screenshot%202025-10-02%20at%201.41.59%E2%80%AFAM.png"/></figure>
+
+<p>Remote Code Execution using the PoC</p>
+
+<p>Github: <a href="https://github.com/gotr00t0day/CVE-2025-24893">https://github.com/gotr00t0day/CVE-2025-24893</a></p>
+
+<h1>HAPPY HACKING</h1>
+
+</body>
+</html>
+
