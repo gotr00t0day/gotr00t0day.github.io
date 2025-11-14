@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GraphQL Introspection: When Your API Documentation Becomes Your Biggest Security Risk - gotr00t Security Blog</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(45deg, #000000, #0a0a0a, #111111);
+            color: #ffffff;
+            font-family: 'Share Tech Mono', monospace;
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        /* Animated binary background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.15) 1px, transparent 0);
+            background-size: 20px 20px;
+            animation: binaryFlow 10s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes binaryFlow {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(20px); }
+        }
+
+        /* Navigation */
+        .nav-header {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #ffffff;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 12px 20px;
+            border: 1px solid transparent;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #ffffff;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #ffffff;
+            color: #ffffff;
+        }
+
+        .nav-link i {
+            color: #ffffff;
+            width: 16px;
+            text-align: center;
+        }
+
+        /* Main content */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            min-height: 100vh;
+        }
+
+        .terminal-prompt {
+            color: #00ff00;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3em;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            letter-spacing: 3px;
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2em;
+            font-weight: 700;
+            margin: 30px 0 15px 0;
+            color: #ffffff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            letter-spacing: 2px;
+        }
+
+        h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5em;
+            font-weight: 400;
+            margin: 25px 0 10px 0;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            letter-spacing: 1px;
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: #ffffff;
+            font-size: 1.1em;
+        }
+
+        strong {
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        em {
+            color: #cccccc;
+            font-style: italic;
+        }
+
+        a {
+            color: #00ff00;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            color: #ffffff;
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+        ol {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        ol li {
+            margin-bottom: 15px;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        /* Image styling */
+        figure {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        figure img {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        figure img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-link {
+                padding: 10px 15px;
+                font-size: 0.9em;
+            }
+
+            h1 {
+                font-size: 2.5em;
+            }
+
+            h2 {
+                font-size: 1.8em;
+            }
+
+            .container {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="nav-header">
+        <div class="nav-container">
+            <ul class="nav-links">
+                <li><a href="../index.html" class="nav-link"><i class="fas fa-home"></i>Home</a></li>
+                <li><a href="../poc.html" class="nav-link"><i class="fas fa-bug"></i>PoC</a></li>
+                <li><a href="../projects.html" class="nav-link"><i class="fas fa-code"></i>Projects</a></li>
+                <li><a href="../guides.html" class="nav-link"><i class="fas fa-book"></i>Guides</a></li>
+                <li><a href="../blog.html" class="nav-link active"><i class="fas fa-pen-nib"></i>Blog</a></li>
+                <li><a href="../contact.html" class="nav-link"><i class="fas fa-envelope"></i>Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="terminal-prompt">gotr00t@graphql:~$</div>
+        
+        <h1>GraphQL Introspection</h1>
+
+        <h2>When Your API Documentation Becomes Your Biggest Security Risk</h2>
+
+        <p><strong><em>What is GraphQL?</em></strong></p>
+
+        <p>GraphQL is a query language and runtime for APIs, developed by Facebook. GraphQL allows clients to request exactly the data they need in a single request, unlike REST APIs where you often get fixed data structures from multiple endpoints.</p>
+
+        <p><strong>Let's talk about the introspection feature in GraphQL</strong></p>
+
+        <p>GraphQL introspection allows clients to query the GraphQL server itself to discover information about the schema it implements. These are types of objects, fields and arguments, queries and mutations. You can now picture how this can become a security risk if it's enabled in a production environment especially for internal or sensitive APIs.</p>
+
+        <p><strong>What's the impact of this vulnerability?</strong></p>
+
+        <h3>This vulnerability can expose critical information to potential attackers:</h3>
+
+        <ol>
+            <li>API reconnaissance: Gaining a complete understanding of the API structure, including sensitive data fields.</li>
+            <li>Information Disclosure: Sensitive Information in private fields or descriptions, this is accomplished through queries.</li>
+            <li>Other Attacks: Knowledge of the Schema can aid in exploiting other vulnerabilities like SQLi, DoS or Authentication bypass by providing a clear Map of the API.</li>
+        </ol>
+
+        <h3>Now that we got that out the way, let me tell you how I identified a production GraphQL endpoint with introspection queries enabled.</h3>
+
+        <p><strong>GraphQL API endpoint</strong></p>
+
+        <p>The endpoint was located at https://redacted.com/api/graphql</p>
+
+        <p><strong>How did we find the vulnerability?</strong></p>
+
+        <p>I found the vulnerability using a vulnerability scanner named Gsec, this tool performs Passive and Aggressive scans to find vulnerabilities and misconfigurations. This is the best web application penetration testing tool I've ever used.</p>
+
+        <figure><img src="../Images/gsec.png" alt="Gsec vulnerability scanner identifying GraphQL introspection"/></figure>
+
+        <p>As you can see in the image above, it identified the introspection vulnerability with no problem, I then visited the GraphQL endpoint that I mentioned earlier to test introspection queries.</p>
+
+        <figure><img src="../Images/brupsuite.png" alt="Burp Suite intercepting GraphQL introspection queries"/></figure>
+
+        <p>I used Burp Suite to intercept the traffic and to test the queries. As you can see above, the queries worked, I can see sensitive fields that I can later use to keep enumerating and extract more information about the GraphQL server.</p>
+
+        <p>To add insult to injury, they also had a Yoga GraphiQL endpoint, which allows us to test queries with ease, this endpoint makes our life even easier Lol.</p>
+
+        <figure><img src="../Images/yogagraphl.png" alt="Yoga GraphiQL endpoint for testing queries"/></figure>
+
+        <h2>Conclusion</h2>
+
+        <p>GraphQL introspection in production is like leaving your building blueprints taped to the front door. Sure, it's convenient for the architect, but it's even more convenient for the burglar. Disable it, test your endpoints, and don't give attackers the keys to your API kingdom.</p>
+
+        <h1>HAPPY HACKING!</h1>
+
+    </div>
+
+</body>
+</html>
