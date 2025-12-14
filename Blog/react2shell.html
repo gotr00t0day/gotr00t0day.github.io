@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React2Shell (CVE-2025-55182): Unauthenticated Remote Code Execution in React Server Components - gotr00t Security Blog</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(45deg, #000000, #0a0a0a, #111111);
+            color: #ffffff;
+            font-family: 'Share Tech Mono', monospace;
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        /* Animated binary background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.15) 1px, transparent 0);
+            background-size: 20px 20px;
+            animation: binaryFlow 10s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes binaryFlow {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(20px); }
+        }
+
+        /* Navigation */
+        .nav-header {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #ffffff;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 12px 20px;
+            border: 1px solid transparent;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #ffffff;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #ffffff;
+            color: #ffffff;
+        }
+
+        .nav-link i {
+            color: #ffffff;
+            width: 16px;
+            text-align: center;
+        }
+
+        /* Main content */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            min-height: 100vh;
+        }
+
+        .terminal-prompt {
+            color: #00ff00;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3em;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            letter-spacing: 3px;
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2em;
+            font-weight: 700;
+            margin: 30px 0 15px 0;
+            color: #ffffff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            letter-spacing: 2px;
+        }
+
+        h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5em;
+            font-weight: 400;
+            margin: 25px 0 10px 0;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            letter-spacing: 1px;
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: #ffffff;
+            font-size: 1.1em;
+        }
+
+        strong {
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        em {
+            color: #cccccc;
+            font-style: italic;
+        }
+
+        a {
+            color: #00ff00;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            color: #ffffff;
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+        ul {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        ul li {
+            margin-bottom: 15px;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        /* Code/command styling */
+        code {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Share Tech Mono', monospace;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-size: 0.9em;
+            word-break: break-all;
+        }
+
+        /* Image styling */
+        figure {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        figure img {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        figure img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-link {
+                padding: 10px 15px;
+                font-size: 0.9em;
+            }
+
+            h1 {
+                font-size: 2.5em;
+            }
+
+            h2 {
+                font-size: 1.8em;
+            }
+
+            .container {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="nav-header">
+        <div class="nav-container">
+            <ul class="nav-links">
+                <li><a href="../index.html" class="nav-link"><i class="fas fa-home"></i>Home</a></li>
+                <li><a href="../poc.html" class="nav-link"><i class="fas fa-bug"></i>PoC</a></li>
+                <li><a href="../projects.html" class="nav-link"><i class="fas fa-code"></i>Projects</a></li>
+                <li><a href="../guides.html" class="nav-link"><i class="fas fa-book"></i>Guides</a></li>
+                <li><a href="../blog.html" class="nav-link active"><i class="fas fa-pen-nib"></i>Blog</a></li>
+                <li><a href="../contact.html" class="nav-link"><i class="fas fa-envelope"></i>Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="terminal-prompt">gotr00t@react2shell:~$</div>
+        
+        <h1>React2Shell: When Modern Web Frameworks Become Attack Vectors</h1>
+
+        <p><strong><em>What are React Server Components?</em></strong></p>
+
+        <p>React Server Components are a React architecture feature that allows certain components to be rendered exclusively on the server and streamed to the client, rather than being bundled and executed in the browser. The primary objective is to reduce client-side JavaScript, improve performance, and enable direct server access from components.</p>
+
+        <p><strong><em>React2Shell (CVE-2025-55182)</em></strong></p>
+
+        <p>CVE-2025-55182 is a critical and unauthenticated RCE vulnerability in React Server Components and the underlying Flight protocol that manages how server side data is serialized/deserialized.</p>
+
+        <p><strong><em>Exploitation in the Wild</em></strong></p>
+
+        <p>Threat actors have been observed rapidly compromising servers affected by CVE-2025-55182, with widespread exposure evident through internet wide scanning platforms such as Shodan. Shodan data shows a large number of internet facing servers running Next.js in versions impacted by this vulnerability. In the referenced screenshot, approximately 436,871 exposed instances are identified, a significant portion of which are likely vulnerable, highlighting the scale of the attack surface and the urgency of remediation.</p>
+
+        <figure><img src="../Images/shodanreactshell.png" alt="Shodan search results showing vulnerable Next.js instances"/></figure>
+
+        <p><strong><em>Proof of Concept</em></strong></p>
+
+        <p>In a nutshell, an exploit for CVE-2025-55182 exploits a weakness in how vulnerable Next.js versions process server side requests and internal routing logic, particularly when handling user controlled input that reaches server only execution paths.</p>
+
+        <p>Here's an example of the HTTP payload:</p>
+
+        <p><code>{"then":"$$B1337\"}","_response":{"_prefix":"var res=process.mainModule.require('child_process').execSync('echo ${res};307;`});","_chunks":"$$1:constructor:constructor"}}}</code></p>
+
+        <p>This payload shows how CVE-2025-55182 can be abused to:</p>
+
+        <ul>
+            <li>Pollute internal JavaScript objects</li>
+            <li>Escape intended request handling</li>
+            <li>Execute server side logic in an unsafe context</li>
+            <li>Prove execution by forcing a server-generated redirect</li>
+            <li>It is not exploiting application code directly, it is abusing framework behavior.</li>
+        </ul>
+
+        <p>The PoC relies on a combination of:</p>
+
+        <ul>
+            <li>Prototype pollution</li>
+            <li>Promise / then confusion</li>
+            <li>Unsafe server-side deserialization</li>
+            <li>Execution inside the Next.js server runtime</li>
+            <li>Next.js incorrectly trusts certain structured inputs that should never be influenced by the client.</li>
+        </ul>
+
+        <figure><img src="../Images/reactshellpoc.png" alt="Proof of concept demonstrating remote code execution"/></figure>
+
+        <p>The image above shows how we can achieve remote code execution by using the payload and constructing a simple and effective PoC.</p>
+
+        <h1>HAPPY HACKING</h1>
+
+    </div>
+
+</body>
+</html>
