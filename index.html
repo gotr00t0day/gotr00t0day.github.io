@@ -24,6 +24,15 @@
             overflow: hidden;
         }
 
+        @media (max-width: 768px) {
+            body {
+                overflow-y: auto;
+                overflow-x: hidden;
+                align-items: flex-start;
+                padding: 20px 0;
+            }
+        }
+
         /* Animated binary background */
         body::before {
             content: "";
@@ -48,6 +57,7 @@
             z-index: 10;
             max-width: 1200px;
             padding: 40px 20px;
+            width: 100%;
         }
 
         h1 {
@@ -68,7 +78,7 @@
         .subtitle {
             font-size: 1.5em;
             color: #ffffff;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
             font-weight: 300;
             letter-spacing: 2px;
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
@@ -76,7 +86,7 @@
         }
 
         .video-container {
-            margin: 40px auto;
+            margin: 20px auto;
             max-width: 800px;
             border: 3px solid #ffffff;
             border-radius: 15px;
@@ -111,7 +121,8 @@
         }
 
         .enter-button {
-            margin-top: 50px;
+            margin-top: 30px;
+            margin-bottom: 30px;
             display: inline-block;
         }
 
@@ -177,21 +188,33 @@
             }
 
             .subtitle {
-                font-size: 1.2em;
+                font-size: 1.1em;
+                margin-bottom: 15px;
             }
 
             .video-container {
                 max-width: 100%;
                 padding: 5px;
+                margin: 15px auto;
+            }
+
+            .enter-button {
+                margin-top: 20px;
+                margin-bottom: 20px;
             }
 
             .enter-btn {
-                font-size: 1.2em;
-                padding: 15px 40px;
+                font-size: 1.1em;
+                padding: 15px 35px;
             }
 
             .welcome-container {
                 padding: 20px 15px;
+            }
+
+            .terminal-prompt {
+                font-size: 1em;
+                margin-bottom: 15px;
             }
         }
     </style>
@@ -204,7 +227,7 @@
         <p class="subtitle">Security from the Shadows</p>
 
         <div class="video-container">
-            <video autoplay muted loop playsinline>
+            <video id="welcomeVideo" autoplay muted loop playsinline preload="auto">
                 <source src="videos/grok-gotroot.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
@@ -219,6 +242,17 @@
     </div>
 
     <script>
+        // Force video autoplay on mobile
+        const video = document.getElementById('welcomeVideo');
+        
+        // Ensure video plays
+        video.play().catch(function(error) {
+            // If autoplay fails, try again after user interaction
+            document.addEventListener('touchstart', function() {
+                video.play();
+            }, { once: true });
+        });
+
         // Simulate system initialization
         setTimeout(() => {
             document.querySelector('.terminal-prompt').textContent = 'gotr00t@welcome:~$ System ready. Access granted.';
