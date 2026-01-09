@@ -21,7 +21,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
+            overflow-y: auto;
+            overflow-x: hidden;
         }
 
         @media (max-width: 768px) {
@@ -56,7 +57,7 @@
             text-align: center;
             z-index: 10;
             max-width: 1200px;
-            padding: 40px 20px;
+            padding: 20px;
             width: 100%;
         }
 
@@ -76,9 +77,9 @@
         }
 
         .subtitle {
-            font-size: 1.5em;
+            font-size: 1.4em;
             color: #ffffff;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             font-weight: 300;
             letter-spacing: 2px;
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
@@ -86,12 +87,12 @@
         }
 
         .video-container {
-            margin: 20px auto;
-            max-width: 900px;
-            width: 90%;
+            margin: 15px auto;
+            max-width: 600px;
+            width: 80%;
             border: 3px solid #ffffff;
             border-radius: 15px;
-            padding: 10px;
+            padding: 8px;
             background: rgba(0, 0, 0, 0.8);
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
             position: relative;
@@ -118,25 +119,26 @@
             width: 100%;
             height: auto;
             max-width: 100%;
+            max-height: 55vh;
             display: block;
             border-radius: 10px;
             object-fit: contain;
         }
 
         .enter-button {
-            margin-top: 30px;
-            margin-bottom: 30px;
+            margin-top: 20px;
+            margin-bottom: 20px;
             display: inline-block;
         }
 
         .enter-btn {
             font-family: 'Orbitron', monospace;
-            font-size: 1.5em;
+            font-size: 1.3em;
             font-weight: 900;
             color: #000000;
             background: #ffffff;
             border: 3px solid #ffffff;
-            padding: 20px 60px;
+            padding: 15px 50px;
             text-decoration: none;
             text-transform: uppercase;
             letter-spacing: 3px;
@@ -147,7 +149,7 @@
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
             display: inline-flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
 
         .enter-btn::before {
@@ -179,8 +181,8 @@
         .terminal-prompt {
             color: #00ff00;
             font-family: 'Share Tech Mono', monospace;
-            font-size: 1.2em;
-            margin-bottom: 30px;
+            font-size: 1.1em;
+            margin-bottom: 15px;
             text-shadow: 0 0 10px #00ff00;
         }
 
