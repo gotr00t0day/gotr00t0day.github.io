@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - gotr00t</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(45deg, #000000, #0a0a0a, #111111);
+            color: #ffffff;
+            font-family: 'Share Tech Mono', monospace;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Animated binary background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.15) 1px, transparent 0);
+            background-size: 20px 20px;
+            animation: binaryFlow 10s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes binaryFlow {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(20px); }
+        }
+
+        .welcome-container {
+            text-align: center;
+            z-index: 10;
+            max-width: 1200px;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 4em;
+            color: #ffffff;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+            margin-bottom: 30px;
+            animation: glow 2s ease-in-out infinite alternate;
+            letter-spacing: 5px;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 30px rgba(255, 255, 255, 0.8); }
+            to { text-shadow: 0 0 50px rgba(255, 255, 255, 1), 0 0 80px rgba(255, 255, 255, 0.5); }
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            color: #ffffff;
+            margin-bottom: 40px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .video-container {
+            margin: 40px auto;
+            max-width: 800px;
+            border: 3px solid #ffffff;
+            border-radius: 15px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: scan 3s infinite;
+        }
+
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 10px;
+        }
+
+        .enter-button {
+            margin-top: 50px;
+            display: inline-block;
+        }
+
+        .enter-btn {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5em;
+            font-weight: 900;
+            color: #000000;
+            background: #ffffff;
+            border: 3px solid #ffffff;
+            padding: 20px 60px;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .enter-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .enter-btn:hover::before {
+            left: 100%;
+        }
+
+        .enter-btn:hover {
+            background: #000000;
+            color: #ffffff;
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.8);
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        .enter-btn i {
+            font-size: 1.2em;
+        }
+
+        .terminal-prompt {
+            color: #00ff00;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+
+            .subtitle {
+                font-size: 1.2em;
+            }
+
+            .video-container {
+                max-width: 100%;
+                padding: 5px;
+            }
+
+            .enter-btn {
+                font-size: 1.2em;
+                padding: 15px 40px;
+            }
+
+            .welcome-container {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="welcome-container">
+        <div class="terminal-prompt">gotr00t@welcome:~$ Initializing system...</div>
+        
+        <p class="subtitle">Security from the Shadows</p>
+
+        <div class="video-container">
+            <video autoplay muted loop playsinline>
+                <source src="videos/grok-gotroot.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <div class="enter-button">
+            <a href="main.html" class="enter-btn">
+                <i class="fas fa-terminal"></i>
+                ENTER
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Simulate system initialization
+        setTimeout(() => {
+            document.querySelector('.terminal-prompt').textContent = 'gotr00t@welcome:~$ System ready. Access granted.';
+        }, 2000);
+
+        // Add click sound effect (optional)
+        document.querySelector('.enter-btn').addEventListener('click', function(e) {
+            // Add any transition effects here if needed
+        });
+    </script>
+</body>
+</html>
