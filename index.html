@@ -14,7 +14,7 @@
         }
 
         body {
-            background: linear-gradient(45deg, #000000, #0a0a0a, #111111);
+            background: #000000;
             color: #ffffff;
             font-family: 'Share Tech Mono', monospace;
             min-height: 100vh;
@@ -32,25 +32,6 @@
                 align-items: flex-start;
                 padding: 20px 0;
             }
-        }
-
-        /* Animated binary background */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.15) 1px, transparent 0);
-            background-size: 20px 20px;
-            animation: binaryFlow 10s linear infinite;
-            z-index: -1;
-        }
-
-        @keyframes binaryFlow {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(20px); }
         }
 
         .welcome-container {
