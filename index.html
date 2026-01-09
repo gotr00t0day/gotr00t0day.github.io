@@ -77,12 +77,12 @@
         }
 
         .subtitle {
-            font-size: 1.4em;
+            font-size: 2.2em;
             color: #ffffff;
-            margin-bottom: 10px;
-            font-weight: 300;
-            letter-spacing: 2px;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            margin-bottom: 15px;
+            font-weight: 400;
+            letter-spacing: 4px;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
             animation: glow 2s ease-in-out infinite alternate;
         }
 
@@ -178,13 +178,6 @@
             font-size: 1.2em;
         }
 
-        .terminal-prompt {
-            color: #00ff00;
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 1.1em;
-            margin-bottom: 15px;
-            text-shadow: 0 0 10px #00ff00;
-        }
 
         /* Responsive design */
         @media (max-width: 768px) {
@@ -218,18 +211,12 @@
                 padding: 20px 15px;
             }
 
-            .terminal-prompt {
-                font-size: 1em;
-                margin-bottom: 15px;
-            }
         }
     </style>
 </head>
 
 <body>
     <div class="welcome-container">
-        <div class="terminal-prompt">gotr00t@welcome:~$ Initializing system...</div>
-        
         <p class="subtitle">Security from the Shadows</p>
 
         <div class="video-container">
@@ -259,10 +246,6 @@
             }, { once: true });
         });
 
-        // Simulate system initialization
-        setTimeout(() => {
-            document.querySelector('.terminal-prompt').textContent = 'gotr00t@welcome:~$ System ready. Access granted.';
-        }, 2000);
 
         // Add click sound effect (optional)
         document.querySelector('.enter-btn').addEventListener('click', function(e) {
