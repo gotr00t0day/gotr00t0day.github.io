@@ -145,65 +145,6 @@
             max-width: 800px;
         }
 
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 40px;
-        }
-
-        .skill-card {
-            background: rgba(0, 0, 0, 0.8);
-            border: 2px solid #ffffff;
-            border-radius: 10px;
-            padding: 20px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .skill-card::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .skill-card:hover::before {
-            left: 100%;
-        }
-
-        .skill-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
-            border-color: #cccccc;
-        }
-
-        .skill-icon {
-            font-size: 2.5em;
-            margin-bottom: 15px;
-            text-align: center;
-            color: #ffffff;
-        }
-
-        .skill-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.3em;
-            color: #ffffff;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .skill-description {
-            color: #cccccc;
-            line-height: 1.6;
-            text-align: center;
-        }
-
         .terminal-prompt {
             color: #ffffff;
             font-weight: bold;
@@ -264,10 +205,6 @@
             h1 {
                 font-size: 2.5em;
             }
-            
-            .skills-grid {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
@@ -301,44 +238,6 @@
                 For freedom, and for the beauty of the baud alone.
             </div>
 
-            <div class="skills-grid">
-                <div class="skill-card">
-                    <div class="skill-icon"><i class="fas fa-search"></i></div>
-                    <div class="skill-title">Vulnerability Research</div>
-                    <div class="skill-description">
-                        Discovering zero-day vulnerabilities and security flaws in web applications, 
-                        networks, and systems through advanced reconnaissance and analysis techniques.
-                    </div>
-                </div>
-
-                <div class="skill-card">
-                    <div class="skill-icon"><i class="fas fa-bomb"></i></div>
-                    <div class="skill-title">Exploit Development</div>
-                    <div class="skill-description">
-                        Crafting sophisticated proof-of-concept exploits and payloads to demonstrate 
-                        the impact of discovered vulnerabilities and assist in remediation efforts.
-                    </div>
-                </div>
-
-                <div class="skill-card">
-                    <div class="skill-icon"><i class="fas fa-shield-alt"></i></div>
-                    <div class="skill-title">Penetration Testing</div>
-                    <div class="skill-description">
-                        Comprehensive security assessments using advanced methodologies to identify 
-                        weaknesses and provide actionable recommendations for security improvements.
-                    </div>
-                </div>
-
-                <div class="skill-card">
-                    <div class="skill-icon"><i class="fas fa-cogs"></i></div>
-                    <div class="skill-title">Tool Development</div>
-                    <div class="skill-description">
-                        Creating custom security tools and frameworks to automate vulnerability discovery, 
-                        streamline testing processes, and enhance overall security assessment capabilities.
-                    </div>
-                </div>
-            </div>
-            <br>
             <div class="social-links">
                 <a href="https://github.com/gotr00t0day" target="_blank" class="social-link">
                     <i class="fab fa-github"></i> GitHub Arsenal
@@ -363,17 +262,6 @@
     </div>
 
     <script>
-        // Add some interactive effects
-        document.querySelectorAll('.skill-card').forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                card.style.borderColor = '#cccccc';
-            });
-            
-            card.addEventListener('mouseleave', () => {
-                card.style.borderColor = '#ffffff';
-            });
-        });
-
         // Simulate system initialization
         setTimeout(() => {
             document.querySelector('.terminal-prompt').textContent = 'gotr00t@hacker:~$ Access granted. Explore the digital underground.';
