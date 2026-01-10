@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+	<head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>React2Shell (CVE-2025-55182): Unauthenticated Remote Code Execution in React Server Components - gotr00t Security Blog</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -246,7 +246,7 @@
             }
         }
     </style>
-</head>
+	</head>
 
 <body>
     <!-- Navigation -->
@@ -266,11 +266,11 @@
     <div class="container">
         <div class="terminal-prompt">gotr00t@react2shell:~$</div>
         
-        <h1>React2Shell: When Modern Web Frameworks Become Attack Vectors</h1>
+<h1>React2Shell: When Modern Web Frameworks Become Attack Vectors</h1>
 
         <p><strong><em>What are React Server Components?</em></strong></p>
 
-        <p>React Server Components are a React architecture feature that allows certain components to be rendered exclusively on the server and streamed to the client, rather than being bundled and executed in the browser. The primary objective is to reduce client-side JavaScript, improve performance, and enable direct server access from components.</p>
+<p>React Server Components are a React architecture feature that allows certain components to be rendered exclusively on the server and streamed to the client, rather than being bundled and executed in the browser. The primary objective is to reduce client-side JavaScript, improve performance, and enable direct server access from components.</p>
 
         <p><strong><em>React2Shell (CVE-2025-55182)</em></strong></p>
 
@@ -278,43 +278,43 @@
 
         <p><strong><em>Exploitation in the Wild</em></strong></p>
 
-        <p>Threat actors have been observed rapidly compromising servers affected by CVE-2025-55182, with widespread exposure evident through internet wide scanning platforms such as Shodan. Shodan data shows a large number of internet facing servers running Next.js in versions impacted by this vulnerability. In the referenced screenshot, approximately 436,871 exposed instances are identified, a significant portion of which are likely vulnerable, highlighting the scale of the attack surface and the urgency of remediation.</p>
+<p>Threat actors have been observed rapidly compromising servers affected by CVE-2025-55182, with widespread exposure evident through internet wide scanning platforms such as Shodan. Shodan data shows a large number of internet facing servers running Next.js in versions impacted by this vulnerability. In the referenced screenshot, approximately 436,871 exposed instances are identified, a significant portion of which are likely vulnerable, highlighting the scale of the attack surface and the urgency of remediation.</p>
 
         <figure><img src="../Images/shodanreactshell.png" alt="Shodan search results showing vulnerable Next.js instances"/></figure>
 
-        <p><strong><em>Proof of Concept</em></strong></p>
+<p><strong><em>Proof of Concept</em></strong></p>
 
-        <p>In a nutshell, an exploit for CVE-2025-55182 exploits a weakness in how vulnerable Next.js versions process server side requests and internal routing logic, particularly when handling user controlled input that reaches server only execution paths.</p>
+<p>In a nutshell, an exploit for CVE-2025-55182 exploits a weakness in how vulnerable Next.js versions process server side requests and internal routing logic, particularly when handling user controlled input that reaches server only execution paths.</p>
 
         <p>Here's an example of the HTTP payload:</p>
 
         <p><code>{"then":"$$B1337\"}","_response":{"_prefix":"var res=process.mainModule.require('child_process').execSync('echo ${res};307;`});","_chunks":"$$1:constructor:constructor"}}}</code></p>
 
-        <p>This payload shows how CVE-2025-55182 can be abused to:</p>
+<p>This payload shows how CVE-2025-55182 can be abused to:</p>
 
-        <ul>
-            <li>Pollute internal JavaScript objects</li>
-            <li>Escape intended request handling</li>
-            <li>Execute server side logic in an unsafe context</li>
-            <li>Prove execution by forcing a server-generated redirect</li>
-            <li>It is not exploiting application code directly, it is abusing framework behavior.</li>
-        </ul>
+<ul>
+	<li>Pollute internal JavaScript objects</li>
+	<li>Escape intended request handling</li>
+	<li>Execute server side logic in an unsafe context</li>
+	<li>Prove execution by forcing a server-generated redirect</li>
+	<li>It is not exploiting application code directly, it is abusing framework behavior.</li>
+</ul>
 
-        <p>The PoC relies on a combination of:</p>
+<p>The PoC relies on a combination of:</p>
 
-        <ul>
-            <li>Prototype pollution</li>
-            <li>Promise / then confusion</li>
-            <li>Unsafe server-side deserialization</li>
-            <li>Execution inside the Next.js server runtime</li>
-            <li>Next.js incorrectly trusts certain structured inputs that should never be influenced by the client.</li>
-        </ul>
+<ul>
+	<li>Prototype pollution</li>
+	<li>Promise / then confusion</li>
+	<li>Unsafe server-side deserialization</li>
+	<li>Execution inside the Next.js server runtime</li>
+	<li>Next.js incorrectly trusts certain structured inputs that should never be influenced by the client.</li>
+</ul>
 
         <figure><img src="../Images/reactshellpoc.png" alt="Proof of concept demonstrating remote code execution"/></figure>
 
-        <p>The image above shows how we can achieve remote code execution by using the payload and constructing a simple and effective PoC.</p>
+<p>The image above shows how we can achieve remote code execution by using the payload and constructing a simple and effective PoC.</p>
 
-        <h1>HAPPY HACKING</h1>
+<h1>HAPPY HACKING</h1>
 
     </div>
 
