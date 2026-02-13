@@ -655,6 +655,40 @@
             </div>
         </div>
 
+        <!-- CVE-2024-45440 -->
+        <div class="cve-card">
+            <div class="impact-badge">MEDIUM</div>
+            <div class="cve-header">
+                <div class="cve-id">CVE-2024-45440</div>
+                <div class="severity-badge medium">CVSS 5.3</div>
+            </div>
+            <div class="cve-title">Drupal 11.x-dev Full Path Disclosure</div>
+            <div class="cve-description">
+                Information disclosure vulnerability in Drupal 11.x-dev that exposes sensitive file system paths through the authorize.php endpoint. The vulnerability allows attackers to discover server directory structures, settings.php locations, and potentially sensitive configuration file paths without authentication.
+            </div>
+            <div class="cve-meta">
+                <div class="meta-item">
+                    <div class="meta-label">Year</div>
+                    <div class="meta-value">2024</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Type</div>
+                    <div class="meta-value">Info Disclosure</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Impact</div>
+                    <div class="meta-value">Medium</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Target</div>
+                    <div class="meta-value">Drupal</div>
+                </div>
+            </div>
+            <div class="cve-links">
+                <a href="https://github.com/gotr00t0day/3xplo1tz/blob/main/CVE-2024-45440.py" target="_blank" class="cve-link">🔗 PoC Script</a>
+            </div>
+        </div>
+
         <!-- Additional exploits from 3xplo1tz repository -->
         <div class="cve-card">
             <div class="impact-badge">ARSENAL</div>
@@ -704,7 +738,7 @@
 
         // Simulate loading effect
         setTimeout(() => {
-            document.querySelector('.terminal-prompt').textContent = 'gotr00t@arsenal:~$ Vulnerability database loaded. 17 critical discoveries indexed.';
+            document.querySelector('.terminal-prompt').textContent = 'gotr00t@arsenal:~$ Vulnerability database loaded. 18 critical discoveries indexed.';
         }, 2000);
     </script>
 </body>
