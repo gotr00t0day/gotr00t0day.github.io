@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="utf-8" />
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+		<title>Reading the Room: Detecting Firewalls Before They Detect You</title>
+	</head>
+<body>
+<h1>Reading the Room: Detecting Firewalls Before They Detect You</h1>
+
+<p><strong><em>Firewalls on Linux</em></strong></p>
+
+<p>Whats a firewall on Linux? A firewall installed on a Linux system acts as a traffic filtering system that controls which network activities ares allowed. It enforces security policy by inspecting packet headers and deciding to accept, drop or reject them.</p>
+
+<p><strong><em>Why detect firewalls?</em></strong><em></em></p>
+
+<p>Detecting firewalls during post exploitation its about mapping the control plane of the network, it allows you to understand what security boundaries exist and how traffic is filtered.</p>
+
+<p><strong><em>Defining the attack surface</em></strong></p>
+
+<p>A firewall can determine which ports are reachable, which protocols are allowed and what hosts and services are exposed. Without detecting this attack surface you may wast time attacking blocked ports and miss reachable services on alternate ports.</p>
+
+<p>A lot of different firewall policies leak information through packet behavior. These behaviors allow you to identify if there’s a firewall blocking your requests. </p>
+
+<p><strong><em>Main Linux Firewalls</em></strong></p>
+
+<ol>
+	<li>Iptables
+
+		<p>Low-level CLI to configure Netfilter using tables and chains.</p>
+
+<pre><code class="code-highlighted code-bash">iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+iptables -A INPUT -j DROP</code></pre>
+
+		<p>Lets look at these 2 commands, at first glance they’re short, but together they implement a strong default and deny firewall policy.</p>
+
+		<p><mark>First rule — allow SSH</mark>:</p>
+
+		<p><code>iptables -A INPUT -p tcp --dport 22 -j ACCEPT</code></p>
+
+		<p><mark>What each part means</mark>:</p>
+
+		<ol>
+			<li>-A INPUT: append rule to the INPUT chain (traffic coming into this machine)</li>
+			<li>-p tcp: match TCP packets only</li>
+			<li>--dport 22: match destination port 22</li>
+			<li>-j ACCEPT: allow the packet</li>
+		</ol>
+
+		<p><mark>Second rule — drop everything else</mark>:</p>
+
+		<p><code>iptables -A INPUT -j DROP</code></p>
+
+		<p><mark>What it means</mark></p>
+
+		<ol>
+			<li>-A INPUT: still filtering inbound traffic</li>
+			<li>-j DROP: silently discard packets</li>
+		</ol></li>
+	<li>Nftables
+
+		<p> Successor to iptables. Unified, faster, simpler rule engine.</p>
+
+		<p><code>nft add rule inet filter input tcp dport 22 accept</code></p>
+
+		<p>This command allows incoming SSH traffic.</p>
+
+		<p> 3.Firewalld</p>
+
+		<p>Higher-level service that manages nftables/iptables underneath.</p>
+
+<pre><code class="code-highlighted code-bash">firewall-cmd --add-service=ssh
+firewall-cmd --permanent --add-service=http</code></pre>
+
+		<p>These 2 commands allows SSH now and also allows HTTP permanently.</p>
+
+		<p> 4.UFW</p>
+
+		<p>Simple frontend to iptables/nftables, beginner-friendly.</p>
+
+<pre><code class="code-highlighted code-bash">ufw allow 22
+ufw <span class="syntax-all syntax-constant">enable</span></code></pre>
+
+		<p>These 2 commands will allow SSH access and turn the firewall on.</p></li>
+</ol>
+
+<p><strong><em>Automating the process of detecting Firewalls</em></strong></p>
+
+<p>I wrote a simple but effective Bash script that detects which firewalls are installed and running on a Linux system. This is the first time I’m sharing the code publicly.</p>
+
+<p>fw<em>detect.sh:</em></p>
+
+<pre><code class="code-highlighted code-bash"><span class="syntax-all syntax-comment">#!/bin/bash
+</span><span class="syntax-all syntax-comment"># fw_detect.sh — Quick Linux firewall detection
+</span><span class="syntax-all syntax-comment"># by c0d3Ninja
+</span>
+RED=<span class="syntax-all syntax-string">&#39;\033[0;31m&#39;</span>
+GREEN=<span class="syntax-all syntax-string">&#39;\033[0;32m&#39;</span>
+YELLOW=<span class="syntax-all syntax-string">&#39;\033[1;33m&#39;</span>
+CYAN=<span class="syntax-all syntax-string">&#39;\033[0;36m&#39;</span>
+BOLD=<span class="syntax-all syntax-string">&#39;\033[1m&#39;</span>
+RESET=<span class="syntax-all syntax-string">&#39;\033[0m&#39;</span>
+
+<span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${BOLD}${CYAN}</span><span class="syntax-all syntax-string">[*] Firewall Detection</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string">&quot;</span>
+<span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;─────────────────────────────────&quot;</span>
+found=0
+
+<span class="syntax-all syntax-comment"># iptables
+</span><span class="syntax-all syntax-keyword">if</span> <span class="syntax-all syntax-constant">command</span> -v iptables <span class="syntax-all syntax-keyword">&amp;&gt;</span>/dev/null<span class="syntax-all syntax-keyword">;</span> <span class="syntax-all syntax-keyword">then</span>
+    rules=<span class="syntax-all syntax-string">$(iptables -L -n </span><span class="syntax-all syntax-keyword">2&gt;</span><span class="syntax-all syntax-string">/dev/null </span><span class="syntax-all syntax-keyword">|</span><span class="syntax-all syntax-string"> grep -cve &#39;^Chain\|^target\|^$&#39; </span><span class="syntax-all syntax-keyword">2&gt;</span><span class="syntax-all syntax-string">/dev/null)</span>
+    <span class="syntax-all syntax-keyword">if</span> [ <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">$rules</span><span class="syntax-all syntax-string">&quot;</span> -gt 0 ] <span class="syntax-all syntax-keyword">2&gt;</span>/dev/null<span class="syntax-all syntax-keyword">;</span> <span class="syntax-all syntax-keyword">then</span>
+        <span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${GREEN}</span><span class="syntax-all syntax-string">[+] iptables</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string"> — ACTIVE (</span><span class="syntax-all syntax-constant">$rules</span><span class="syntax-all syntax-string"> rules)&quot;</span>
+        found=1
+    <span class="syntax-all syntax-keyword">else</span>
+        <span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${YELLOW}</span><span class="syntax-all syntax-string">[~] iptables</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string"> — installed, no rules&quot;</span>
+    <span class="syntax-all syntax-keyword">fi</span>
+<span class="syntax-all syntax-keyword">fi</span>
+
+<span class="syntax-all syntax-comment"># nftables
+</span><span class="syntax-all syntax-keyword">if</span> <span class="syntax-all syntax-constant">command</span> -v nft <span class="syntax-all syntax-keyword">&amp;&gt;</span>/dev/null<span class="syntax-all syntax-keyword">;</span> <span class="syntax-all syntax-keyword">then</span>
+    tables=<span class="syntax-all syntax-string">$(nft list tables </span><span class="syntax-all syntax-keyword">2&gt;</span><span class="syntax-all syntax-string">/dev/null </span><span class="syntax-all syntax-keyword">|</span><span class="syntax-all syntax-string"> wc -l)</span>
+    <span class="syntax-all syntax-keyword">if</span> [ <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">$tables</span><span class="syntax-all syntax-string">&quot;</span> -gt 0 ] <span class="syntax-all syntax-keyword">2&gt;</span>/dev/null<span class="syntax-all syntax-keyword">;</span> <span class="syntax-all syntax-keyword">then</span>
+        <span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${GREEN}</span><span class="syntax-all syntax-string">[+] nftables</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string"> — ACTIVE (</span><span class="syntax-all syntax-constant">$tables</span><span class="syntax-all syntax-string"> tables)&quot;</span>
+        found=1
+    <span class="syntax-all syntax-keyword">else</span>
+        <span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${YELLOW}</span><span class="syntax-all syntax-string">[~] nftables</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string"> — installed, no tables&quot;</span>
+    <span class="syntax-all syntax-keyword">fi</span>
+<span class="syntax-all syntax-keyword">fi</span>
+
+<span class="syntax-all syntax-comment"># ufw
+</span><span class="syntax-all syntax-keyword">if</span> <span class="syntax-all syntax-constant">command</span> -v ufw <span class="syntax-all syntax-keyword">&amp;&gt;</span>/dev/null<span class="syntax-all syntax-keyword">;</span> <span class="syntax-all syntax-keyword">then</span>
+    status=<span class="syntax-all syntax-string">$(ufw status </span><span class="syntax-all syntax-keyword">2&gt;</span><span class="syntax-all syntax-string">/dev/null </span><span class="syntax-all syntax-keyword">|</span><span class="syntax-all syntax-string"> head -1)</span>
+    <span class="syntax-all syntax-keyword">if</span> <span class="syntax-all syntax-constant">echo</span> <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">$status</span><span class="syntax-all syntax-string">&quot;</span> <span class="syntax-all syntax-keyword">|</span> grep -qi <span class="syntax-all syntax-string">&quot;active&quot;</span><span class="syntax-all syntax-keyword">;</span> <span class="syntax-all syntax-keyword">then</span>
+        <span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${GREEN}</span><span class="syntax-all syntax-string">[+] ufw</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string"> — ACTIVE&quot;</span>
+        found=1
+    <span class="syntax-all syntax-keyword">else</span>
+        <span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${YELLOW}</span><span class="syntax-all syntax-string">[~] ufw</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string"> — installed, inactive&quot;</span>
+    <span class="syntax-all syntax-keyword">fi</span>
+<span class="syntax-all syntax-keyword">fi</span>
+
+<span class="syntax-all syntax-comment"># firewalld
+</span><span class="syntax-all syntax-keyword">if</span> <span class="syntax-all syntax-constant">command</span> -v firewall-cmd <span class="syntax-all syntax-keyword">&amp;&gt;</span>/dev/null<span class="syntax-all syntax-keyword">;</span> <span class="syntax-all syntax-keyword">then</span>
+    <span class="syntax-all syntax-keyword">if</span> firewall-cmd --state <span class="syntax-all syntax-keyword">2&gt;</span>/dev/null <span class="syntax-all syntax-keyword">|</span> grep -qi <span class="syntax-all syntax-string">&quot;running&quot;</span><span class="syntax-all syntax-keyword">;</span> <span class="syntax-all syntax-keyword">then</span>
+        zone=<span class="syntax-all syntax-string">$(firewall-cmd --get-default-zone </span><span class="syntax-all syntax-keyword">2&gt;</span><span class="syntax-all syntax-string">/dev/null)</span>
+        <span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${GREEN}</span><span class="syntax-all syntax-string">[+] firewalld</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string"> — ACTIVE (zone: </span><span class="syntax-all syntax-constant">$zone</span><span class="syntax-all syntax-string">)&quot;</span>
+        found=1
+    <span class="syntax-all syntax-keyword">else</span>
+        <span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${YELLOW}</span><span class="syntax-all syntax-string">[~] firewalld</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string"> — installed, not running&quot;</span>
+    <span class="syntax-all syntax-keyword">fi</span>
+<span class="syntax-all syntax-keyword">fi</span>
+
+<span class="syntax-all syntax-comment"># CSF (ConfigServer Firewall)
+</span><span class="syntax-all syntax-keyword">if</span> <span class="syntax-all syntax-constant">command</span> -v csf <span class="syntax-all syntax-keyword">&amp;&gt;</span>/dev/null<span class="syntax-all syntax-keyword">;</span> <span class="syntax-all syntax-keyword">then</span>
+    <span class="syntax-all syntax-keyword">if</span> csf -l <span class="syntax-all syntax-keyword">&amp;&gt;</span>/dev/null<span class="syntax-all syntax-keyword">;</span> <span class="syntax-all syntax-keyword">then</span>
+        <span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${GREEN}</span><span class="syntax-all syntax-string">[+] CSF</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string"> — ACTIVE&quot;</span>
+        found=1
+    <span class="syntax-all syntax-keyword">else</span>
+        <span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${YELLOW}</span><span class="syntax-all syntax-string">[~] CSF</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string"> — installed&quot;</span>
+    <span class="syntax-all syntax-keyword">fi</span>
+<span class="syntax-all syntax-keyword">fi</span>
+
+<span class="syntax-all syntax-comment"># APF (Advanced Policy Firewall)
+</span><span class="syntax-all syntax-keyword">if</span> <span class="syntax-all syntax-constant">command</span> -v apf <span class="syntax-all syntax-keyword">&amp;&gt;</span>/dev/null<span class="syntax-all syntax-keyword">;</span> <span class="syntax-all syntax-keyword">then</span>
+    <span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${GREEN}</span><span class="syntax-all syntax-string">[+] APF</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string"> — installed&quot;</span>
+    found=1
+<span class="syntax-all syntax-keyword">fi</span>
+
+<span class="syntax-all syntax-comment"># Shorewall
+</span><span class="syntax-all syntax-keyword">if</span> <span class="syntax-all syntax-constant">command</span> -v shorewall <span class="syntax-all syntax-keyword">&amp;&gt;</span>/dev/null<span class="syntax-all syntax-keyword">;</span> <span class="syntax-all syntax-keyword">then</span>
+    <span class="syntax-all syntax-keyword">if</span> shorewall status <span class="syntax-all syntax-keyword">2&gt;</span>/dev/null <span class="syntax-all syntax-keyword">|</span> grep -qi <span class="syntax-all syntax-string">&quot;running&quot;</span><span class="syntax-all syntax-keyword">;</span> <span class="syntax-all syntax-keyword">then</span>
+        <span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${GREEN}</span><span class="syntax-all syntax-string">[+] Shorewall</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string"> — ACTIVE&quot;</span>
+        found=1
+    <span class="syntax-all syntax-keyword">else</span>
+        <span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${YELLOW}</span><span class="syntax-all syntax-string">[~] Shorewall</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string"> — installed, not running&quot;</span>
+    <span class="syntax-all syntax-keyword">fi</span>
+<span class="syntax-all syntax-keyword">fi</span>
+
+<span class="syntax-all syntax-comment"># fail2ban
+</span><span class="syntax-all syntax-keyword">if</span> <span class="syntax-all syntax-constant">command</span> -v fail2ban-client <span class="syntax-all syntax-keyword">&amp;&gt;</span>/dev/null<span class="syntax-all syntax-keyword">;</span> <span class="syntax-all syntax-keyword">then</span>
+    jails=<span class="syntax-all syntax-string">$(fail2ban-client status </span><span class="syntax-all syntax-keyword">2&gt;</span><span class="syntax-all syntax-string">/dev/null </span><span class="syntax-all syntax-keyword">|</span><span class="syntax-all syntax-string"> grep &quot;Number of jail&quot; </span><span class="syntax-all syntax-keyword">|</span><span class="syntax-all syntax-string"> awk &#39;{print $NF}&#39;)</span>
+    <span class="syntax-all syntax-keyword">if</span> [ -n <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">$jails</span><span class="syntax-all syntax-string">&quot;</span> ] <span class="syntax-all syntax-keyword">&amp;&amp;</span> [ <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">$jails</span><span class="syntax-all syntax-string">&quot;</span> -gt 0 ] <span class="syntax-all syntax-keyword">2&gt;</span>/dev/null<span class="syntax-all syntax-keyword">;</span> <span class="syntax-all syntax-keyword">then</span>
+        <span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${GREEN}</span><span class="syntax-all syntax-string">[+] fail2ban</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string"> — ACTIVE (</span><span class="syntax-all syntax-constant">$jails</span><span class="syntax-all syntax-string"> jails)&quot;</span>
+        found=1
+    <span class="syntax-all syntax-keyword">else</span>
+        <span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${YELLOW}</span><span class="syntax-all syntax-string">[~] fail2ban</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string"> — installed&quot;</span>
+    <span class="syntax-all syntax-keyword">fi</span>
+<span class="syntax-all syntax-keyword">fi</span>
+
+<span class="syntax-all syntax-comment"># SELinux
+</span><span class="syntax-all syntax-keyword">if</span> <span class="syntax-all syntax-constant">command</span> -v getenforce <span class="syntax-all syntax-keyword">&amp;&gt;</span>/dev/null<span class="syntax-all syntax-keyword">;</span> <span class="syntax-all syntax-keyword">then</span>
+    mode=<span class="syntax-all syntax-string">$(getenforce </span><span class="syntax-all syntax-keyword">2&gt;</span><span class="syntax-all syntax-string">/dev/null)</span>
+    <span class="syntax-all syntax-keyword">if</span> [ <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">$mode</span><span class="syntax-all syntax-string">&quot;</span> = <span class="syntax-all syntax-string">&quot;Enforcing&quot;</span> ]<span class="syntax-all syntax-keyword">;</span> <span class="syntax-all syntax-keyword">then</span>
+        <span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${GREEN}</span><span class="syntax-all syntax-string">[+] SELinux</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string"> — ENFORCING&quot;</span>
+        found=1
+    <span class="syntax-all syntax-keyword">elif</span> [ <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">$mode</span><span class="syntax-all syntax-string">&quot;</span> = <span class="syntax-all syntax-string">&quot;Permissive&quot;</span> ]<span class="syntax-all syntax-keyword">;</span> <span class="syntax-all syntax-keyword">then</span>
+        <span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${YELLOW}</span><span class="syntax-all syntax-string">[~] SELinux</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string"> — Permissive (logging only)&quot;</span>
+    <span class="syntax-all syntax-keyword">else</span>
+        <span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${YELLOW}</span><span class="syntax-all syntax-string">[~] SELinux</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string"> — Disabled&quot;</span>
+    <span class="syntax-all syntax-keyword">fi</span>
+<span class="syntax-all syntax-keyword">fi</span>
+
+<span class="syntax-all syntax-comment"># AppArmor
+</span><span class="syntax-all syntax-keyword">if</span> <span class="syntax-all syntax-constant">command</span> -v aa-status <span class="syntax-all syntax-keyword">&amp;&gt;</span>/dev/null<span class="syntax-all syntax-keyword">;</span> <span class="syntax-all syntax-keyword">then</span>
+    profiles=<span class="syntax-all syntax-string">$(aa-status </span><span class="syntax-all syntax-keyword">2&gt;</span><span class="syntax-all syntax-string">/dev/null </span><span class="syntax-all syntax-keyword">|</span><span class="syntax-all syntax-string"> grep &quot;profiles are in enforce&quot; </span><span class="syntax-all syntax-keyword">|</span><span class="syntax-all syntax-string"> awk &#39;{print $1}&#39;)</span>
+    <span class="syntax-all syntax-keyword">if</span> [ -n <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">$profiles</span><span class="syntax-all syntax-string">&quot;</span> ] <span class="syntax-all syntax-keyword">&amp;&amp;</span> [ <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">$profiles</span><span class="syntax-all syntax-string">&quot;</span> -gt 0 ] <span class="syntax-all syntax-keyword">2&gt;</span>/dev/null<span class="syntax-all syntax-keyword">;</span> <span class="syntax-all syntax-keyword">then</span>
+        <span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${GREEN}</span><span class="syntax-all syntax-string">[+] AppArmor</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string"> — ACTIVE (</span><span class="syntax-all syntax-constant">$profiles</span><span class="syntax-all syntax-string"> enforced profiles)&quot;</span>
+        found=1
+    <span class="syntax-all syntax-keyword">else</span>
+        <span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${YELLOW}</span><span class="syntax-all syntax-string">[~] AppArmor</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string"> — installed&quot;</span>
+    <span class="syntax-all syntax-keyword">fi</span>
+<span class="syntax-all syntax-keyword">fi</span>
+
+<span class="syntax-all syntax-comment"># AWS Security Groups (check if running on EC2)
+</span><span class="syntax-all syntax-keyword">if</span> curl -s --connect-timeout 1 http://169.254.169.254/latest/meta-data/ <span class="syntax-all syntax-keyword">&amp;&gt;</span>/dev/null<span class="syntax-all syntax-keyword">;</span> <span class="syntax-all syntax-keyword">then</span>
+    <span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${CYAN}</span><span class="syntax-all syntax-string">[*] AWS EC2</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string"> — Security Groups likely in place&quot;</span>
+<span class="syntax-all syntax-keyword">fi</span>
+
+<span class="syntax-all syntax-comment"># Check for related systemd services
+</span><span class="syntax-all syntax-constant">echo</span> <span class="syntax-all syntax-string">&quot;&quot;</span>
+<span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${BOLD}${CYAN}</span><span class="syntax-all syntax-string">[*] Firewall Services</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string">&quot;</span>
+<span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;─────────────────────────────────&quot;</span>
+<span class="syntax-all syntax-keyword">for</span> <span class="syntax-all syntax-parameter">svc</span> <span class="syntax-all syntax-keyword">in</span> iptables nftables ufw firewalld csf fail2ban apparmor<span class="syntax-all syntax-keyword">;</span> <span class="syntax-all syntax-keyword">do</span>
+    status=<span class="syntax-all syntax-string">$(systemctl is-active </span><span class="syntax-all syntax-constant">$svc</span><span class="syntax-all syntax-string"> </span><span class="syntax-all syntax-keyword">2&gt;</span><span class="syntax-all syntax-string">/dev/null)</span>
+    <span class="syntax-all syntax-keyword">if</span> [ <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">$status</span><span class="syntax-all syntax-string">&quot;</span> = <span class="syntax-all syntax-string">&quot;active&quot;</span> ]<span class="syntax-all syntax-keyword">;</span> <span class="syntax-all syntax-keyword">then</span>
+        <span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${GREEN}</span><span class="syntax-all syntax-string">[+] </span><span class="syntax-all syntax-constant">$svc</span><span class="syntax-all syntax-string">.service</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string"> — running&quot;</span>
+    <span class="syntax-all syntax-keyword">elif</span> systemctl list-unit-files <span class="syntax-all syntax-keyword">2&gt;</span>/dev/null <span class="syntax-all syntax-keyword">|</span> grep -q <span class="syntax-all syntax-string">&quot;^</span><span class="syntax-all syntax-constant">${svc}</span><span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-keyword">;</span> <span class="syntax-all syntax-keyword">then</span>
+        <span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${YELLOW}</span><span class="syntax-all syntax-string">[~] </span><span class="syntax-all syntax-constant">$svc</span><span class="syntax-all syntax-string">.service</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string"> — installed, </span><span class="syntax-all syntax-constant">$status</span><span class="syntax-all syntax-string">&quot;</span>
+    <span class="syntax-all syntax-keyword">fi</span>
+<span class="syntax-all syntax-keyword">done</span>
+
+<span class="syntax-all syntax-comment"># Open ports as seen internally
+</span><span class="syntax-all syntax-constant">echo</span> <span class="syntax-all syntax-string">&quot;&quot;</span>
+<span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${BOLD}${CYAN}</span><span class="syntax-all syntax-string">[*] Listening Ports</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string">&quot;</span>
+<span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;─────────────────────────────────&quot;</span>
+<span class="syntax-all syntax-keyword">if</span> <span class="syntax-all syntax-constant">command</span> -v ss <span class="syntax-all syntax-keyword">&amp;&gt;</span>/dev/null<span class="syntax-all syntax-keyword">;</span> <span class="syntax-all syntax-keyword">then</span>
+    ss -tlnp <span class="syntax-all syntax-keyword">2&gt;</span>/dev/null <span class="syntax-all syntax-keyword">|</span> tail -n +2
+<span class="syntax-all syntax-keyword">elif</span> <span class="syntax-all syntax-constant">command</span> -v netstat <span class="syntax-all syntax-keyword">&amp;&gt;</span>/dev/null<span class="syntax-all syntax-keyword">;</span> <span class="syntax-all syntax-keyword">then</span>
+    netstat -tlnp <span class="syntax-all syntax-keyword">2&gt;</span>/dev/null <span class="syntax-all syntax-keyword">|</span> tail -n +2
+<span class="syntax-all syntax-keyword">fi</span>
+
+<span class="syntax-all syntax-constant">echo</span> <span class="syntax-all syntax-string">&quot;&quot;</span>
+<span class="syntax-all syntax-keyword">if</span> [ <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">$found</span><span class="syntax-all syntax-string">&quot;</span> -eq 0 ]<span class="syntax-all syntax-keyword">;</span> <span class="syntax-all syntax-keyword">then</span>
+    <span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${RED}${BOLD}</span><span class="syntax-all syntax-string">[!] No active firewall detected</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string">&quot;</span>
+<span class="syntax-all syntax-keyword">else</span>
+    <span class="syntax-all syntax-constant">echo</span> -e <span class="syntax-all syntax-string">&quot;</span><span class="syntax-all syntax-constant">${GREEN}${BOLD}</span><span class="syntax-all syntax-string">[+] Firewall(s) detected</span><span class="syntax-all syntax-constant">${RESET}</span><span class="syntax-all syntax-string">&quot;</span>
+<span class="syntax-all syntax-keyword">fi</span></code></pre>
+
+<p>Once you identify which firewall services are installed on the compromised system, you can adjust rules to allow specific ports and services or otherwise modify the firewall configuration to remove restrictions and continue further testing.</p>
+
+<h1>HACKING FROM THE SHADOWS!</h1>
+
+</body>
+</html>
+
