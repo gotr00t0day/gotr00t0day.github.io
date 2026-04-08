@@ -319,6 +319,31 @@
         <p class="subtitle">Open-source security tools and exploit development</p>
 
     <div class="projects-grid">
+            <!-- LeakyVessels -->
+            <div class="project-card">
+                <span class="project-badge">Container Security</span>
+                <h2 class="project-title">
+                    <i class="fab fa-docker"></i>
+                    LeakyVessels
+                </h2>
+                <p class="project-description">
+                    Checks whether the host’s runc version is affected by CVE-2024-21626 (Leaky Vessels): locates runc in common paths or on PATH, parses the runc version string, and flags releases before 1.1.12 as vulnerable—useful for patching and image rebuild decisions on container nodes.
+                </p>
+                <div class="project-meta">
+                    <span class="meta-item"><i class="fas fa-code"></i> C++20</span>
+                    <span class="meta-item"><i class="fas fa-star"></i> Open Source</span>
+                </div>
+                <div class="project-tags">
+                    <span class="project-tag">runc</span>
+                    <span class="project-tag">Containers</span>
+                    <span class="project-tag">CVE-2024-21626</span>
+                </div>
+                <a href="https://github.com/gotr00t0day/LeakyVessels" target="_blank" class="project-link">
+                    <i class="fab fa-github"></i>
+                    View Repository
+                </a>
+            </div>
+
             <!-- privwatch -->
             <div class="project-card">
                 <span class="project-badge">Linux Audit</span>
