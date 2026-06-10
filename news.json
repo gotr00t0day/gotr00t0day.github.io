@@ -5,5 +5,12 @@
     "title": "Nightmare Eclipse is back!",
     "body": "Church of Malware is now hosting Nightmare Eclipse exploits. Check it out for the latest releases!",
     "url": "https://git.churchofmalware.org/Nightmare_Eclipse/"
+  },
+  {
+    "date": "2026-06-10",
+    "tag": "Release",
+    "title": "KernelPwn v1.6 is out!",
+    "body": "Added a new module for the One Character Linux kernel vulnerability to kernelpwn",
+    "url": "https://github.com/gotr00t0day/kernelpwned"
   }
 ]
