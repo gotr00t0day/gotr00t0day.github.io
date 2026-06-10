@@ -1,23 +1,9 @@
 [
   {
-    "date": "2026-05-21",
-    "tag": "Release",
-    "title": "SSHAgentJack published",
-    "body": "Post-exploitation tool for discovering and hijacking live SSH agent sockets on Linux.",
-    "url": "https://github.com/gotr00t0day/SSHAgentJack"
-  },
-  {
-    "date": "2026-05-20",
-    "tag": "Guide",
-    "title": "Linux Syscalls & ptrace guide",
-    "body": "New C/C++ tutorial covering raw syscalls, ptrace, and post-exploitation research on Linux.",
-    "url": "https://github.com/gotr00t0day/Cplusplus-Syscalls-and-Ptrace-Guide"
-  },
-  {
-    "date": "2026-05-12",
-    "tag": "Blog",
-    "title": "Watching the Watchers",
-    "body": "Detecting inotify and fanotify filesystem surveillance on Linux with InodeSpy.",
-    "url": "Blog/watchingthewatchers.html"
+    "date": "2026-06-10",
+    "tag": "News",
+    "title": "Nightmare Eclipse is back!",
+    "body": "Church of Malware is now hosting Nightmare Eclipse exploits. Check it out for the latest releases!",
+    "url": "https://git.churchofmalware.org/Nightmare_Eclipse/"
   }
 ]
