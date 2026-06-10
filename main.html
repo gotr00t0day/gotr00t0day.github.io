@@ -111,9 +111,158 @@
 
         #content {
             flex: 1;
+            min-width: 0;
             padding: 40px;
             background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(5px);
+        }
+
+        /* News panel — edit news.json to update */
+        #news-panel {
+            width: 300px;
+            flex-shrink: 0;
+            background: rgba(0, 0, 0, 0.92);
+            border-left: 2px solid #ffffff;
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: -4px 0 20px rgba(255, 255, 255, 0.15);
+            position: sticky;
+            top: 0;
+            align-self: flex-start;
+            max-height: 100vh;
+            overflow: hidden;
+        }
+
+        .news-header {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.95em;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #00ff00;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .news-header i {
+            font-size: 0.9em;
+        }
+
+        .news-subtitle {
+            font-size: 0.75em;
+            color: #888;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .news-feed {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .news-feed::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .news-feed::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+
+        .news-item {
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            animation: newsFadeIn 0.4s ease;
+        }
+
+        .news-item:last-child {
+            border-bottom: none;
+        }
+
+        @keyframes newsFadeIn {
+            from { opacity: 0; transform: translateX(8px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .news-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+        }
+
+        .news-date {
+            font-size: 0.7em;
+            color: #888;
+        }
+
+        .news-tag {
+            font-size: 0.65em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 2px 8px;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 10px;
+            color: #ccc;
+        }
+
+        .news-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.85em;
+            color: #fff;
+            margin-bottom: 6px;
+            line-height: 1.35;
+        }
+
+        .news-title a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .news-title a:hover {
+            color: #00ff00;
+            text-shadow: 0 0 8px rgba(0, 255, 0, 0.4);
+        }
+
+        .news-body {
+            font-size: 0.78em;
+            line-height: 1.5;
+            color: #aaa;
+        }
+
+        .news-empty,
+        .news-error {
+            font-size: 0.8em;
+            color: #888;
+            line-height: 1.5;
+            padding: 20px 0;
+        }
+
+        .news-error {
+            color: #ff6b6b;
+        }
+
+        .news-live {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: #00ff00;
+            border-radius: 50%;
+            box-shadow: 0 0 6px #00ff00;
+            animation: newsPulse 2s infinite;
+        }
+
+        @keyframes newsPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
         }
 
         h1 {
@@ -180,6 +329,31 @@
         }
 
         /* Responsive design */
+        @media (max-width: 1100px) {
+            #news-panel {
+                width: 260px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            #container {
+                flex-wrap: wrap;
+            }
+
+            #news-panel {
+                width: 100%;
+                position: static;
+                max-height: none;
+                border-left: none;
+                border-top: 2px solid #ffffff;
+                order: 3;
+            }
+
+            .news-feed {
+                max-height: 320px;
+            }
+        }
+
         @media (max-width: 768px) {
             .nav-links {
                 gap: 15px;
@@ -250,17 +424,27 @@
                 <a href="poc.html" class="social-link">
                     <i class="fas fa-trophy"></i> CVE Discoveries
                 </a>
+            </div>
 
-            <br>
-            <br>
-            <br>
+            <br><br><br>
             <h3>
             <marquee>"We exist without skin color, without nationality, without religious
                 bias... and you call us criminals." — The Hacker's Manifesto, 1986
             </marquee>
             </h3>
         </div>
-    </div>
+
+        <aside id="news-panel" aria-label="Latest news">
+            <div class="news-header">
+                <span class="news-live" aria-hidden="true"></span>
+                <i class="fas fa-satellite-dish"></i>
+                Wire Feed
+            </div>
+            <p class="news-subtitle">Latest from the shadows</p>
+            <div class="news-feed" id="news-feed">
+                <p class="news-empty">Loading wire feed...</p>
+            </div>
+        </aside>
     </div>
 
     <script>
@@ -268,6 +452,48 @@
         setTimeout(() => {
             document.querySelector('.terminal-prompt').textContent = 'gotr00t@hacker:~$ Access granted. Explore the digital underground.';
         }, 2000);
+
+        // Load news from news.json — edit that file to post updates
+        (function loadNews() {
+            const feed = document.getElementById('news-feed');
+            if (!feed) return;
+
+            fetch('news.json')
+                .then(r => {
+                    if (!r.ok) throw new Error('Could not load news.json');
+                    return r.json();
+                })
+                .then(items => {
+                    if (!Array.isArray(items) || items.length === 0) {
+                        feed.innerHTML = '<p class="news-empty">No wire items yet. Add entries to news.json.</p>';
+                        return;
+                    }
+
+                    feed.innerHTML = items.map(item => {
+                        const title = item.title || 'Untitled';
+                        const body = item.body || '';
+                        const date = item.date || '';
+                        const tag = item.tag || 'News';
+                        const url = item.url || '';
+                        const titleHtml = url
+                            ? `<a href="${url}" target="_blank" rel="noopener noreferrer">${title}</a>`
+                            : title;
+
+                        return `
+                            <article class="news-item">
+                                <div class="news-meta">
+                                    <span class="news-date">${date}</span>
+                                    <span class="news-tag">${tag}</span>
+                                </div>
+                                <h2 class="news-title">${titleHtml}</h2>
+                                <p class="news-body">${body}</p>
+                            </article>`;
+                    }).join('');
+                })
+                .catch(() => {
+                    feed.innerHTML = '<p class="news-error">Wire feed offline. Check news.json is present on the server.</p>';
+                });
+        })();
     </script>
 </body>
 </html>
