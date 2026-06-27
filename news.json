@@ -2,8 +2,15 @@
   {
     "date": "2026-06-27",
     "tag": "Release",
+    "title": "KernelPwn v1.8 is out!",
+    "body": "A new module has been added that detects the DirtyClone Linux kernel vulnerability",
+    "url": "https://github.com/gotr00t0day/SSHAgentJack"
+  },
+  {
+    "date": "2026-06-27",
+    "tag": "Release",
     "title": "SSHAgentJack",
-    "body": "Here at gotr00t we are always up to no good.. but whats knew? lulz. I made a post exploitation tool that discovers and hijacks live SSH agent sockets on a compromised Linux system, go check it out!",
+    "body": "Here at gotr00t we're always up to no good.. but whats new? lulz. I made a post exploitation tool that discovers and hijacks live SSH agent sockets on a compromised Linux system, go check it out!",
     "url": "https://github.com/gotr00t0day/SSHAgentJack"
   },
   {
