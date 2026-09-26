@@ -5,500 +5,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>gotr00t - Security Guides</title>
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/theme.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: linear-gradient(45deg, #000000, #0a0a0a, #111111);
-            color: #ffffff;
-            font-family: 'Share Tech Mono', monospace;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        /* Animated binary background */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.15) 1px, transparent 0);
-            background-size: 20px 20px;
-            animation: binaryFlow 10s linear infinite;
-            z-index: -1;
-        }
-
-        @keyframes binaryFlow {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(20px); }
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        /* Navigation */
-        .nav-header {
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(10px);
-            border-bottom: 2px solid #ffffff;
-            padding: 15px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 20px rgba(255, 255, 255, 0.3);
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 0 20px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 30px;
-            list-style: none;
-        }
-
-        .nav-link {
-            color: #ffffff;
-            text-decoration: none;
-            padding: 12px 20px;
-            border: 1px solid transparent;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .nav-link:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: #ffffff;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .nav-link.active {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: #ffffff;
-            color: #ffffff;
-        }
-
-        .nav-link i {
-            color: #ffffff;
-            width: 16px;
-            text-align: center;
-        }
-
-        h1 {
-            font-family: 'Orbitron', monospace;
-            font-size: 3.5em;
-            color: #ffffff;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-            margin: 30px 0 20px 0;
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes glow {
-            from { text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
-            to { text-shadow: 0 0 30px rgba(255, 255, 255, 0.8); }
-        }
-
-        .subtitle {
-            font-size: 1.3em;
-            color: #cccccc;
-            margin-bottom: 20px;
-            font-weight: 300;
-        }
-
-        .guides-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 25px;
-            margin-top: 40px;
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .guide-card {
-            background: rgba(0, 0, 0, 0.8);
-            border: 2px solid #ffffff;
-            border-radius: 15px;
-            padding: 25px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .guide-card::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .guide-card:hover::before {
-            left: 100%;
-        }
-
-        .guide-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
-            border-color: #cccccc;
-        }
-
-        .guide-icon {
-            font-size: 3em;
-            margin-bottom: 20px;
-            text-align: center;
-            color: #ffffff;
-        }
-
-        .guide-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.5em;
-            color: #ffffff;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .guide-description {
-            font-size: 1.1em;
-            line-height: 1.8;
-            color: #cccccc;
-            margin-bottom: 25px;
-        }
-
-        .guide-topics {
-            list-style: none;
-            padding: 0;
-        }
-
-        .guide-topics li {
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            font-size: 0.95em;
-        }
-
-        .guide-topics li:last-child {
-            border-bottom: none;
-        }
-
-        .guide-topics li::before {
-            content: "›";
-            color: #ffffff;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-
-        .github-link {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid #ffffff;
-            border-radius: 5px;
-            padding: 10px 20px;
-            color: #ffffff;
-            text-decoration: none;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            margin-top: 15px;
-        }
-
-        .github-link:hover {
-            background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .github-link i {
-            margin-right: 8px;
-        }
-
-        .warning-box {
-            background: rgba(0, 0, 0, 0.8);
-            border: 2px solid #ffffff;
-            border-radius: 15px;
-            padding: 30px;
-            margin: 40px auto;
-            color: #ffffff;
-            max-width: 1000px;
-            text-align: center;
-        }
-
-        .warning-box h3 {
-            color: #ffffff;
-            margin-bottom: 15px;
-            font-family: 'Orbitron', monospace;
-            font-size: 1.3em;
-        }
-
-        .warning-box p {
-            line-height: 1.6;
-            color: #cccccc;
-            font-size: 1.1em;
-        }
-
-        .impact-badge {
-            position: absolute;
-            top: -2px;
-            right: -2px;
-            background: #ffffff;
-            color: #000;
-            padding: 5px 10px;
-            font-size: 0.7em;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-radius: 0 13px 0 13px;
-            animation: blink 2s infinite;
-        }
-
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0.7; }
-        }
-
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .nav-links {
-                gap: 15px;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            .nav-link {
-                padding: 10px 15px;
-                font-size: 0.9em;
-            }
-            
-            body {
-                padding: 15px;
-            }
-            
-            .categories-container {
-                padding: 0 10px;
-            }
-            
-            h1 {
-                font-size: 2.5em;
-            }
-            
-            .category-header {
-                padding: 15px 20px;
-            }
-            
-            .category-name {
-                font-size: 1.1em;
-            }
-            
-            .guide-item {
-                padding: 12px 20px;
-                gap: 15px;
-            }
-            
-            .guide-item i {
-                font-size: 1.5em;
-                min-width: 35px;
-            }
-            
-            .guide-info h3 {
-                font-size: 1em;
-            }
-            
-            .guide-info p {
-                font-size: 0.85em;
-            }
-            
-            .guide-link {
-                padding: 8px 12px;
-            }
-        }
-
-        .terminal-prompt {
-            color: #ffffff;
-            font-weight: bold;
-        }
-
-        .terminal-prompt::before {
-            content: "";
-        }
-
-        .categories-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
+        .categories-container { max-width: 1000px; margin: 0 auto; padding: 0 20px 60px; }
         .category-dropdown {
-            margin-bottom: 20px;
-            border: 2px solid #ffffff;
-            border-radius: 15px;
-            background: rgba(0, 0, 0, 0.8);
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--surface);
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: border-color .25s var(--ease), box-shadow .25s var(--ease);
         }
-
-        .category-dropdown:hover {
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-        }
-
+        .category-dropdown:hover { border-color: var(--border-strong); box-shadow: var(--shadow); }
         .category-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 25px;
+            padding: 20px 24px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            transition: background .2s var(--ease);
         }
-
-        .category-header::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .category-header:hover::before {
-            left: 100%;
-        }
-
-        .category-header:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .category-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .category-info i {
-            font-size: 1.5em;
-            color: #ffffff;
-        }
-
-        .category-name {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.3em;
-            color: #ffffff;
-            font-weight: bold;
-        }
-
-        .guide-count {
-            font-size: 0.9em;
-            color: #cccccc;
-            margin-left: 10px;
-        }
-
-        .dropdown-arrow {
-            font-size: 1.2em;
-            color: #ffffff;
-            transition: transform 0.3s ease;
-        }
-
-        .dropdown-arrow.rotated {
-            transform: rotate(180deg);
-        }
-
-        .category-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-            background: rgba(0, 0, 0, 0.4);
-        }
-
-        .category-content.active {
-            max-height: 1000px;
-        }
-
+        .category-header:hover { background: var(--surface-2); }
+        .category-info { display: flex; align-items: center; gap: 14px; }
+        .category-info > i { font-size: 1.3em; color: var(--accent); }
+        .category-name { font-family: var(--font-display); font-size: 1.1rem; color: #fff; font-weight: 700; }
+        .guide-count { font-size: 0.8rem; color: var(--text-faint); margin-left: 8px; }
+        .dropdown-arrow { font-size: 1em; color: var(--text-dim); transition: transform .3s var(--ease); }
+        .dropdown-arrow.rotated { transform: rotate(180deg); color: var(--accent); }
+        .category-content { max-height: 0; overflow: hidden; transition: max-height .35s var(--ease); }
+        .category-content.active { max-height: 2000px; }
         .guide-item {
             display: flex;
             align-items: center;
-            gap: 20px;
-            padding: 15px 25px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
+            gap: 18px;
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+            transition: background .2s var(--ease), transform .2s var(--ease);
         }
-
-        .guide-item:last-child {
-            border-bottom: none;
+        .guide-item:hover { background: var(--surface-2); transform: translateX(4px); }
+        .guide-item > i { font-size: 1.4em; color: var(--text-dim); min-width: 38px; text-align: center; }
+        .guide-item:hover > i { color: var(--accent); }
+        .guide-info { flex: 1; }
+        .guide-info h3 { font-family: var(--font-display); font-size: 1rem; color: #fff; margin-bottom: 5px; font-weight: 700; }
+        .guide-info p { font-size: 0.86rem; color: var(--text-dim); line-height: 1.45; }
+        .guide-link { padding: 10px 14px; }
+        .guide-link i { font-size: 1.1em; color: var(--accent); }
+        .warning-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 2px solid var(--accent-dim);
+            border-radius: var(--radius);
+            padding: 26px 30px;
+            margin: 32px auto;
+            max-width: 1000px;
+            text-align: center;
         }
-
-        .guide-item:hover {
-            background: rgba(255, 255, 255, 0.05);
-            transform: translateX(5px);
-        }
-
-        .guide-item i {
-            font-size: 1.8em;
-            color: #ffffff;
-            min-width: 40px;
-        }
-
-        .guide-info {
-            flex: 1;
-        }
-
-        .guide-info h3 {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.1em;
-            color: #ffffff;
-            margin-bottom: 5px;
-        }
-
-        .guide-info p {
-            font-size: 0.9em;
-            color: #cccccc;
-            line-height: 1.4;
-        }
-
-        .guide-link {
-            color: #ffffff;
-            text-decoration: none;
-            padding: 10px 15px;
-            border: 1px solid #ffffff;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .guide-link:hover {
-            background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .guide-link i {
-            font-size: 1.2em;
+        .warning-box h3 { font-family: var(--font-display); color: #fff; margin-bottom: 12px; font-size: 1.15rem; }
+        .warning-box p { line-height: 1.7; color: var(--text-dim); }
+        @media (max-width: 768px) {
+            .category-header { padding: 16px 18px; }
+            .guide-item { padding: 14px 18px; gap: 14px; }
         }
     </style>
 </head>

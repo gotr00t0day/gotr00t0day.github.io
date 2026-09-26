@@ -4,357 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CVE Arsenal - gotr00t</title>
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/theme.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: linear-gradient(45deg, #000000, #0a0a0a, #111111);
-            color: #ffffff;
-            font-family: 'Share Tech Mono', monospace;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        /* Animated binary background */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.15) 1px, transparent 0);
-            background-size: 20px 20px;
-            animation: binaryFlow 10s linear infinite;
-            z-index: -1;
-        }
-
-        @keyframes binaryFlow {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(20px); }
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        h1 {
-            font-family: 'Orbitron', monospace;
-            font-size: 3.5em;
-            color: #ffffff;
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
-            margin-bottom: 20px;
-            animation: dangerGlow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes dangerGlow {
-            from { text-shadow: 0 0 30px rgba(255, 255, 255, 0.8); }
-            to { text-shadow: 0 0 50px rgba(255, 255, 255, 1), 0 0 80px rgba(255, 255, 255, 0.5); }
-        }
-
-        .subtitle {
-            font-size: 1.2em;
-            color: #cccccc;
-            margin-bottom: 10px;
-        }
-
-        /* Navigation */
-        .nav-header {
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(10px);
-            border-bottom: 2px solid #ffffff;
-            padding: 15px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 20px rgba(255, 255, 255, 0.3);
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 0 20px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 30px;
-            list-style: none;
-        }
-
-        .nav-link {
-            color: #ffffff;
-            text-decoration: none;
-            padding: 12px 20px;
-            border: 1px solid transparent;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .nav-link:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: #ffffff;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .nav-link.active {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: #ffffff;
-            color: #ffffff;
-        }
-
-        .nav-link i {
-            color: #ffffff;
-            width: 16px;
-            text-align: center;
-        }
-
         .cve-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 22px;
             max-width: 1200px;
             margin: 0 auto;
+            padding: 0 20px 60px;
         }
-
-        .cve-card {
-            background: rgba(0, 0, 0, 0.9);
-            border: 2px solid #ffffff;
-            border-radius: 12px;
-            padding: 25px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cve-card::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.6s ease;
-        }
-
-        .cve-card:hover::before {
-            left: 100%;
-        }
-
-        .cve-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 40px rgba(255, 255, 255, 0.4);
-            border-color: #cccccc;
-        }
-
+        .cve-card { display: flex; flex-direction: column; }
         .cve-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             flex-wrap: wrap;
             gap: 10px;
         }
-
-        .cve-id {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.4em;
-            color: #ffffff;
-            font-weight: bold;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-        }
-
+        .cve-id { font-family: var(--font-display); font-size: 1.25rem; color: #fff; font-weight: 700; }
         .severity-badge {
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.8em;
-            font-weight: bold;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
-            animation: pulseBadge 2s infinite;
+            border: 1px solid;
         }
-
-        .critical {
-            background: rgba(255, 255, 255, 0.3);
-            color: #ffffff;
-            border: 2px solid #ffffff;
-        }
-
-        .high {
-            background: rgba(204, 204, 204, 0.3);
-            color: #cccccc;
-            border: 2px solid #cccccc;
-        }
-
-        .medium {
-            background: rgba(153, 153, 153, 0.3);
-            color: #999999;
-            border: 2px solid #999999;
-        }
-
-        @keyframes pulseBadge {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        .cve-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.3em;
-            color: #ffffff;
-            margin-bottom: 15px;
-            line-height: 1.4;
-        }
-
-        .cve-description {
-            color: #cccccc;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            font-size: 0.95em;
-        }
-
+        .severity-badge.critical { color: #ff6b6b; border-color: rgba(255, 92, 92, .5); background: rgba(255, 92, 92, .08); }
+        .severity-badge.high { color: #ffb454; border-color: rgba(255, 180, 84, .5); background: rgba(255, 180, 84, .08); }
+        .severity-badge.medium { color: var(--text-dim); border-color: var(--border-strong); background: var(--surface); }
+        .cve-title { font-family: var(--font-display); font-size: 1.15rem; color: #fff; margin-bottom: 14px; line-height: 1.4; }
+        .cve-description { color: var(--text-dim); line-height: 1.65; margin-bottom: 20px; font-size: 0.92rem; }
         .cve-meta {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 8px;
-            border: 1px solid #333;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 14px;
+            margin-bottom: 22px;
+            padding: 18px;
+            background: rgba(0, 0, 0, .35);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
         }
-
-        .meta-item {
-            text-align: center;
-        }
-
-        .meta-label {
-            font-size: 0.8em;
-            color: #999999;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 5px;
-        }
-
-        .meta-value {
-            font-weight: bold;
-            color: #ffffff;
-            font-size: 0.9em;
-        }
-
-        .cve-links {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .cve-link {
-            color: #ffffff;
-            text-decoration: none;
-            padding: 10px 20px;
-            border: 1px solid #ffffff;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.1);
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-size: 0.85em;
-        }
-
-        .cve-link:hover {
-            background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
-            transform: translateY(-2px);
-        }
-
+        .meta-item { text-align: center; }
+        .meta-label { font-size: 0.68rem; color: var(--text-faint); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 5px; }
+        .meta-value { font-weight: 700; color: var(--text); font-size: 0.85rem; }
+        .cve-links { display: flex; gap: 12px; flex-wrap: wrap; margin-top: auto; }
+        .cve-link { padding: 10px 18px; font-size: 0.78rem; }
         .impact-badge {
             position: absolute;
-            top: -2px;
-            right: -2px;
-            background: #ffffff;
+            top: 0;
+            right: 0;
+            background: var(--accent);
             color: #000;
-            padding: 5px 10px;
-            font-size: 0.7em;
-            font-weight: bold;
+            padding: 5px 12px;
+            font-size: 0.65rem;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
-            border-radius: 0 8px 0 8px;
-            animation: blink 1.5s infinite;
+            border-radius: 0 var(--radius) 0 var(--radius);
+            z-index: 2;
         }
-
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0.7; }
-        }
-
-
-
-        /* Responsive design */
         @media (max-width: 768px) {
-            .nav-links {
-                gap: 15px;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            .nav-link {
-                padding: 10px 15px;
-                font-size: 0.9em;
-            }
-            
-            .cve-grid {
-                grid-template-columns: 1fr;
-                gap: 25px;
-            }
-            
-            h1 {
-                font-size: 2.5em;
-            }
-            
-            .cve-card {
-                padding: 25px;
-            }
-            
-            .cve-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 20px;
-            }
-            
-            .stat-number {
-                font-size: 2em;
-            }
-        }
-
-        .terminal-prompt {
-            color: #ffffff;
-            font-weight: bold;
-        }
-
-        .terminal-prompt::before {
-            content: "";
+            .cve-grid { grid-template-columns: 1fr; }
+            .cve-header { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>

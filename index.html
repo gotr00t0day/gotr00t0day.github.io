@@ -4,167 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome - gotr00t</title>
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/theme.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            background: #000000;
-            color: #ffffff;
-            font-family: 'Share Tech Mono', monospace;
-            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow-y: auto;
             overflow-x: hidden;
-        }
-
-        @media (max-width: 768px) {
-            body {
-                overflow-y: auto;
-                overflow-x: hidden;
-                align-items: flex-start;
-                padding: 20px 0;
-            }
+            padding: 40px 20px;
         }
 
         .welcome-container {
             text-align: center;
-            z-index: 10;
-            max-width: 1200px;
-            padding: 20px;
             width: 100%;
+            max-width: 720px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 26px;
         }
 
-        h1 {
-            font-family: 'Orbitron', monospace;
-            font-size: 4em;
-            color: #ffffff;
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
-            margin-bottom: 30px;
-            animation: glow 2s ease-in-out infinite alternate;
-            letter-spacing: 5px;
+        .kicker {
+            font-size: 0.8rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--text-faint);
+        }
+        .kicker .dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 8px var(--accent-glow);
+            margin-right: 8px;
+            vertical-align: middle;
+            animation: caret 2s ease-in-out infinite;
         }
 
-        @keyframes glow {
-            from { text-shadow: 0 0 30px rgba(255, 255, 255, 0.8); }
-            to { text-shadow: 0 0 50px rgba(255, 255, 255, 1), 0 0 80px rgba(255, 255, 255, 0.5); }
+        .hero-title {
+            font-family: var(--font-display);
+            font-weight: 900;
+            font-size: clamp(2.6rem, 9vw, 4.6rem);
+            letter-spacing: 4px;
+            color: #fff;
+            text-shadow: 0 0 40px rgba(255, 255, 255, 0.15);
         }
 
         .subtitle {
-            font-size: 2.2em;
-            color: #ffffff;
-            margin-bottom: 35px;
-            font-weight: 400;
-            letter-spacing: 4px;
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
-            animation: glow 2s ease-in-out infinite alternate;
+            font-size: clamp(1.05rem, 3vw, 1.6rem);
+            letter-spacing: 3px;
+            color: var(--text-dim);
         }
+        .subtitle .accent { color: var(--accent); }
 
         .video-container {
-            margin: 15px auto;
+            width: 100%;
             max-width: 600px;
-            width: 80%;
-            border: none;
-            border-radius: 10px;
-            padding: 0;
-            background: transparent;
-            position: relative;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
             overflow: hidden;
+            background: var(--surface);
+            box-shadow: var(--shadow);
         }
 
         video {
             width: 100%;
             height: auto;
-            max-width: 100%;
             max-height: 55vh;
             display: block;
-            border-radius: 10px;
             object-fit: contain;
         }
 
-        .enter-button {
-            margin-top: 20px;
-            margin-bottom: 20px;
-            display: inline-block;
-        }
-
         .enter-btn {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.3em;
-            font-weight: 900;
-            color: #ffffff;
-            background: #000000;
-            border: 3px solid #ffffff;
-            padding: 15px 50px;
-            text-decoration: none;
-            text-transform: uppercase;
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 700;
             letter-spacing: 3px;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 0 40px rgba(255, 255, 255, 0.8);
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .enter-btn:hover {
-            box-shadow: 0 0 60px rgba(255, 255, 255, 1);
-            transform: translateY(-5px) scale(1.05);
-        }
-
-        .enter-btn i {
-            font-size: 1.2em;
-        }
-
-
-        /* Responsive design */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2.5em;
-            }
-            
-            .subtitle {
-                font-size: 1.1em;
-                margin-bottom: 15px;
-            }
-
-            .video-container {
-                max-width: 100%;
-                width: 95%;
-                padding: 5px;
-                margin: 15px auto;
-            }
-
-            .enter-button {
-                margin-top: 20px;
-                margin-bottom: 20px;
-            }
-
-            .enter-btn {
-                font-size: 1.1em;
-                padding: 15px 35px;
-            }
-
-            .welcome-container {
-                padding: 20px 15px;
-            }
-
+            padding: 16px 52px;
         }
     </style>
 </head>
 
 <body>
     <div class="welcome-container">
-        <p class="subtitle">Hacking from the Shadows</p>
+        <p class="kicker"><span class="dot"></span>System online</p>
+        <h1 class="hero-title">gotr00t</h1>
+        <p class="subtitle">Hacking from the <span class="accent">Shadows</span></p>
 
         <div class="video-container">
             <video id="welcomeVideo" autoplay muted loop playsinline preload="auto">
@@ -172,31 +102,17 @@
                 Your browser does not support the video tag.
             </video>
         </div>
-        
-        <div class="enter-button">
-            <a href="main.html" class="enter-btn">
-                <i class="fas fa-terminal"></i>
-                ENTER
-            </a>
-    </div>
+
+        <a href="main.html" class="enter-btn btn-accent">
+            <i class="fas fa-terminal"></i>
+            ENTER
+        </a>
     </div>
 
     <script>
-        // Force video autoplay on mobile
         const video = document.getElementById('welcomeVideo');
-        
-        // Ensure video plays
-        video.play().catch(function(error) {
-            // If autoplay fails, try again after user interaction
-            document.addEventListener('touchstart', function() {
-                video.play();
-            }, { once: true });
-        });
-
-
-        // Add click sound effect (optional)
-        document.querySelector('.enter-btn').addEventListener('click', function(e) {
-            // Add any transition effects here if needed
+        video.play().catch(function () {
+            document.addEventListener('touchstart', function () { video.play(); }, { once: true });
         });
     </script>
 </body>
