@@ -1,0 +1,162 @@
+/* ============================================================
+   Long-form article pages (blog posts / write-ups).
+   Pairs with theme.css — relies on its tokens, base and nav.
+   Scoped under .container so it only affects article prose.
+   ============================================================ */
+
+.container {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 48px 22px 80px;
+}
+.container > .terminal-prompt {
+    display: inline-block;
+    margin-bottom: 26px;
+}
+
+.container h1 {
+    font-family: var(--font-display);
+    font-size: clamp(1.9rem, 5vw, 2.9rem);
+    font-weight: 900;
+    letter-spacing: 1px;
+    line-height: 1.2;
+    color: #fff;
+    margin-bottom: 28px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--border);
+    text-shadow: 0 0 24px rgba(255, 255, 255, 0.1);
+}
+
+.container h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.35rem, 3.5vw, 1.8rem);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #fff;
+    margin: 44px 0 16px;
+    padding-left: 14px;
+    border-left: 3px solid var(--accent-dim);
+}
+
+.container h3 {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    color: var(--accent-soft);
+    margin: 30px 0 12px;
+}
+
+.container p {
+    color: var(--text-dim);
+    font-size: 1.02rem;
+    line-height: 1.85;
+    margin-bottom: 20px;
+}
+
+.container strong { color: var(--text); font-weight: 700; }
+.container em { color: var(--text); font-style: italic; }
+
+.container a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+.container a:hover { color: var(--accent-soft); border-bottom-color: var(--accent-soft); }
+
+/* Inline code */
+.container code {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    background: rgba(57, 255, 20, 0.07);
+    color: var(--accent-soft);
+    padding: 2px 7px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+}
+
+/* Code blocks */
+.container pre {
+    position: relative;
+    background: #0b0b0d;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 22px;
+    margin: 24px 0;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+.container pre::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-dim), transparent);
+}
+.container pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #d6f5cc;
+    font-size: inherit;
+}
+
+.container mark {
+    background: rgba(57, 255, 20, 0.12);
+    color: var(--accent-soft);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.container ul, .container ol { margin: 20px 0; padding-left: 26px; }
+.container li {
+    color: var(--text-dim);
+    font-size: 1.02rem;
+    line-height: 1.8;
+    margin-bottom: 10px;
+}
+.container li::marker { color: var(--accent); }
+
+.container blockquote {
+    border-left: 2px solid var(--accent-dim);
+    background: var(--surface);
+    padding: 16px 22px;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    margin: 24px 0;
+    color: var(--text-dim);
+    font-style: italic;
+}
+
+.container img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+}
+
+.container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+    font-size: 0.92rem;
+}
+.container th, .container td {
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    text-align: left;
+}
+.container th { background: var(--surface-2); color: #fff; }
+.container td { color: var(--text-dim); }
+
+.container .conclusion {
+    border-top: 1px solid var(--border);
+    margin-top: 48px;
+    padding-top: 32px;
+}
+
+@media (max-width: 768px) {
+    .container { padding: 32px 18px 60px; }
+}
