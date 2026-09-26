@@ -31,43 +31,264 @@
 
         <h1>Wide Open: The Default Credential Problem Hiding in Dominican Telecom Networks</h1>
 
-        <p>I went looking at internet facing telecom equipment in the Dominican Republic and kept running into the same problem: router management pages reachable from the public internet, with some still accepting default administrative credentials.</p>
+        <p>I was reviewing internet-facing telecom equipment in the Dominican Republic when a pattern started to emerge: customer-premises routers and optical network terminals with management services exposed to the public internet. On several devices I checked, familiar default credentials still worked.</p>
 
-        <p>There was no clever exploit involved. In several cases, the password had simply never been changed.</p>
+        <p>There was no clever exploit. In several cases, the password had simply never been changed.</p>
 
-        <h2>What I found</h2>
+        <p>This is the first entry in a planned review of 20 Dominican telecom networks. Each provider will have its own scope, evidence, and findings. Nothing in this article should be read as a claim about a network that has not been examined.</p>
 
-        <p>During research on two network ranges in September 2026, I found numerous devices exposing web management interfaces. Some also exposed Telnet. The equipment appeared to include Huawei EG8141A5 and HG8546M optical network terminals, alongside ZTE F660 devices.</p>
+        <h2>Organizations and routing context</h2>
 
-        <p>An open port alone does not mean a device can be accessed. I checked a subset of the devices and confirmed default credential access on multiple Huawei units. The ZTE devices I tested did <strong>not</strong> accept the credentials I tried, and I did not test every device. That distinction matters: the scan showed exposure; the successful logins established the credential problem on the devices I checked.</p>
+        <p>The two ranges examined were described in public routing records using the names <strong>Dominican Telecom Prime (DTP), SRL</strong> and <strong>ISRAEL DE LOS SANTOS WIFI SRL</strong>.</p>
 
-        <p>The repeated Huawei findings suggest a provisioning issue worth investigating. They do not, by themselves, establish how many subscribers are affected or who configured each device.</p>
+        <p><a href="https://bgp.he.net/AS271988" target="_blank" rel="noopener noreferrer">AS271988 is registered to ISRAEL DE LOS SANTOS WIFI SRL</a>. Its public routing page lists AS64126, identified there as Dominican Telecom Prime (DTP), SRL, as an upstream peer. This shows a routing relationship; it does not make the organizations the same company or prove which organization configured an individual subscriber device.</p>
 
-        <h2>Why the network labels need care</h2>
+        <h2>Scope and method</h2>
 
-        <p>The routing picture is more complicated than a company name beside an IP address. Public routing data shows <strong>AS64126</strong> connected to <strong>AS271988</strong>, the network associated with ISRAEL DE LOS SANTOS WIFI SRL. <a href="https://bgp.he.net/AS271988" target="_blank" rel="noopener noreferrer">Hurricane Electric&rsquo;s AS271988 routing page</a> lists that relationship.</p>
+        <p>On September 12 and 13, 2026, I scanned two <code>/24</code> ranges:</p>
 
-        <p>But an upstream connection does not make the two operators the same company, and an address registered to a carrier does not prove that the carrier owns the router using it. A customer device, a downstream ISP, and an upstream provider can all appear in the same trail of records. Internet attribution: somehow less tidy than the cables behind your desk.</p>
+        <ul>
+            <li><code>154.88.164.0/24</code>, described as ISRAEL DE LOS SANTOS WIFI SRL</li>
+            <li><code>154.88.162.0/24</code>, described as Dominican Telecom Prime (DTP), SRL</li>
+        </ul>
 
-        <p>That is why I&rsquo;m describing the affected <em>devices and observed access</em>, rather than assigning every exposed router to a particular company.</p>
+        <p>Each <code>/24</code> contains 256 addresses. I used masscan 1.3.2 to perform a TCP SYN scan of ports 21, 22, 23, 25, 53, 80, 110, 139, 443, 3306, 3389, 5900, and 8080. The rate was set to 10,000 packets per second.</p>
+
+        <pre><code>sudo masscan -p21,22,23,25,53,80,443,8080,110,139,3306,3389,5900 154.88.164.0/24 --rate=10000
+sudo masscan -p21,22,23,25,53,80,443,8080,110,139,3306,3389,5900 154.88.162.0/24 --rate=10000</code></pre>
+
+        <p>This was a point-in-time snapshot, not a complete inventory. A host that did not respond could still have been online. An open port also does not prove that a login will succeed.</p>
+
+        <h2>Port-scan results</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Routing description</th>
+                    <th>Scanned range</th>
+                    <th>Scan time (UTC)</th>
+                    <th>Responding hosts</th>
+                    <th>Port 80</th>
+                    <th>Port 443</th>
+                    <th>Port 23</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ISRAEL DE LOS SANTOS WIFI SRL</td>
+                    <td><code>154.88.164.0/24</code></td>
+                    <td>September 12, 2026, 15:53:41</td>
+                    <td>34</td>
+                    <td>29</td>
+                    <td>5</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td>Dominican Telecom Prime (DTP), SRL</td>
+                    <td><code>154.88.162.0/24</code></td>
+                    <td>September 13, 2026, 04:36:37</td>
+                    <td>75</td>
+                    <td>69</td>
+                    <td>5</td>
+                    <td>4</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>A device can appear in more than one port column, so the port totals do not equal the unique-host count. The supplied scan output contained no discoveries on the other ports in the scan list.</p>
+
+        <p>Most responses were HTTP management interfaces. A smaller number exposed HTTPS or Telnet. Follow-up inspection suggested that the equipment was largely a mix of <strong>ZTE F660</strong>, <strong>Huawei EG8141A5</strong>, and <strong>Huawei HG8546M</strong> devices.</p>
+
+        <h2>Device and service fingerprints</h2>
+
+        <p>The Telnet fingerprints recorded during follow-up included:</p>
+
+        <pre><code>23/tcp  open  telnet  ZTE F660 router telnetd 1.00-pre7 - 1.14.0
+23/tcp  open  telnet  Huawei Home Gateway telnetd</code></pre>
+
+        <p>The ZTE version range is a scanner-generated estimate, not a verified firmware version. A service banner helps identify a device family, but it does not prove that the service is vulnerable.</p>
+
+        <p>My broader research notes also mention Dropbear SSH and Huawei Telnet on some devices. Both appeared to lead to the same device authentication environment. The two masscan outputs reproduced in this article did not report port 22, however, so the SSH observation remains a separate finding that needs its own captured scan evidence before publication.</p>
+
+        <p>One additional service on TCP/58000 presented a ZTE authentication realm. That port was outside the masscan command above, and the captured request did not prove a successful login.</p>
+
+        <h2>Credential testing</h2>
+
+        <p>I tested only a subset of the responding devices. The evidence falls into two categories: credentials that produced confirmed access and credentials that were tried without success.</p>
+
+        <h4>Confirmed on sampled devices</h4>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Device or service</th>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>Result</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Huawei EG8141A5 and HG8546M web interfaces</td>
+                    <td><code>root</code></td>
+                    <td><code>admin</code></td>
+                    <td>Administrative access confirmed on multiple sampled devices</td>
+                </tr>
+                <tr>
+                    <td>Separate web endpoint; model not recorded</td>
+                    <td><code>telecomadmin</code></td>
+                    <td><code>admintelecom</code></td>
+                    <td>Access recorded; device-model attribution remains open</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>Two confirmed Huawei devices identified themselves as EG8141A5 terminals running <code>V5R019C00S050</code>. Another identified itself as an HG8546M running <code>V3R017C10S208</code>. Their administrative pages exposed serial numbers, registration status, hardware versions, memory use, and other operational details.</p>
+
+        <p>Administrative access also exposes the device configuration tree (<code>hw_ctree.xml</code>). Even with the database-level obfuscation these terminals use, the export reveals the full WLAN setup and lays out where every secret lives: the WPA/WPS material, the WEP key table, the pre-shared key and passphrase, and the RADIUS server key. All sensitive values below are redacted.</p>
+
+        <figure>
+            <img src="../Images/huawei_config_redacted.png" alt="Huawei hw_ctree.xml configuration export with WLAN settings; the RADIUS key, WPS device password, WEP keys, pre-shared key, passphrase, and SSID are redacted" />
+        </figure>
+
+        <p>None of this requires an exploit. Once the default administrative password works, the configuration export is simply available &mdash; and with it, the credentials protecting the subscriber&rsquo;s wireless network.</p>
+
+        <h4>Candidate ZTE credentials tested</h4>
+
+        <p>The following combinations were tested against sampled ZTE F660 devices. <strong>None worked on the devices tested.</strong> They are included as tested candidates, not as confirmed access credentials:</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Common label in research notes</th>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>Result</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Common factory candidate</td>
+                    <td><code>root</code></td>
+                    <td><code>ZTE@ZXV10</code></td>
+                    <td>Unsuccessful on sampled F660 devices</td>
+                </tr>
+                <tr>
+                    <td>Alternate firmware candidate</td>
+                    <td><code>root</code></td>
+                    <td><code>ZTE@ZXHN</code></td>
+                    <td>Unsuccessful on sampled F660 devices</td>
+                </tr>
+                <tr>
+                    <td>Regional firmware candidate</td>
+                    <td><code>admin</code></td>
+                    <td><code>Web@0063</code></td>
+                    <td>Unsuccessful on sampled F660 devices</td>
+                </tr>
+                <tr>
+                    <td>ISP administration candidate</td>
+                    <td><code>telecomadmin</code></td>
+                    <td><code>admintelecom</code></td>
+                    <td>Unsuccessful on sampled F660 devices</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>The tested sample does not prove that every F660 in the ranges rejects these combinations. It also does not justify calling these accounts &ldquo;backdoors.&rdquo; That term requires evidence of a deliberately hidden access mechanism, which this research did not establish.</p>
+
+        <h2>CIDR inventory for AS271988</h2>
+
+        <p>The table below records the IPv4 prefixes and descriptions collected during the routing review. <strong>Only <code>154.88.162.0/24</code> and <code>154.88.164.0/24</code> were scanned for this article.</strong> Every other entry is routing context rather than a vulnerability finding.</p>
+
+        <p>Parent ranges overlap the more-specific <code>/24</code> entries and must not be counted as additional address space.</p>
+
+        <h4>ISRAEL DE LOS SANTOS WIFI SRL</h4>
+
+        <table>
+            <thead>
+                <tr><th>CIDR</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><a href="https://bgp.he.net/net/154.88.164.0/24" target="_blank" rel="noopener noreferrer">154.88.164.0/24</a></td><td>Scanned; findings reported above</td></tr>
+                <tr><td><a href="https://bgp.he.net/net/154.88.165.0/24" target="_blank" rel="noopener noreferrer">154.88.165.0/24</a></td><td>Routing context only</td></tr>
+                <tr><td><a href="https://bgp.he.net/net/154.88.174.0/24" target="_blank" rel="noopener noreferrer">154.88.174.0/24</a></td><td>Routing context only</td></tr>
+                <tr><td><a href="https://bgp.he.net/net/154.88.177.0/24" target="_blank" rel="noopener noreferrer">154.88.177.0/24</a></td><td>Routing context only</td></tr>
+            </tbody>
+        </table>
+
+        <h4>Dominican Telecom Prime (DTP), SRL descriptions under AS271988</h4>
+
+        <p>These prefixes appeared beneath AS271988 with DTP descriptions in the research notes. The description does not mean that AS64126 originated the prefix.</p>
+
+        <table>
+            <thead>
+                <tr><th>CIDR</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><a href="https://bgp.he.net/net/154.88.162.0/24" target="_blank" rel="noopener noreferrer">154.88.162.0/24</a></td><td>Scanned; findings reported above</td></tr>
+                <tr><td><a href="https://bgp.he.net/net/154.88.168.0/24" target="_blank" rel="noopener noreferrer">154.88.168.0/24</a></td><td>Routing context only</td></tr>
+                <tr><td><a href="https://bgp.he.net/net/154.88.169.0/24" target="_blank" rel="noopener noreferrer">154.88.169.0/24</a></td><td>Routing context only; current AS page displays geofeed text</td></tr>
+                <tr><td><a href="https://bgp.he.net/net/154.88.170.0/24" target="_blank" rel="noopener noreferrer">154.88.170.0/24</a></td><td>Routing context only</td></tr>
+                <tr><td><a href="https://bgp.he.net/net/154.88.171.0/24" target="_blank" rel="noopener noreferrer">154.88.171.0/24</a></td><td>Routing context only; current AS page displays geofeed text</td></tr>
+                <tr><td><a href="https://bgp.he.net/net/154.88.178.0/24" target="_blank" rel="noopener noreferrer">154.88.178.0/24</a></td><td>Routing context only</td></tr>
+            </tbody>
+        </table>
+
+        <h4>Aggregate and geofeed descriptions</h4>
+
+        <table>
+            <thead>
+                <tr><th>CIDR</th><th>Description in research notes</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><a href="https://bgp.he.net/net/154.88.160.0/20" target="_blank" rel="noopener noreferrer">154.88.160.0/20</a></td><td>Cloud Innovation Ltd; parent range</td></tr>
+                <tr><td><a href="https://bgp.he.net/net/154.88.161.0/24" target="_blank" rel="noopener noreferrer">154.88.161.0/24</a></td><td><a href="https://dcg.do/geofeed.csv" target="_blank" rel="noopener noreferrer">DCG geofeed</a></td></tr>
+                <tr><td><a href="https://bgp.he.net/net/154.88.163.0/24" target="_blank" rel="noopener noreferrer">154.88.163.0/24</a></td><td><a href="https://dcg.do/geofeed.csv" target="_blank" rel="noopener noreferrer">DCG geofeed</a></td></tr>
+                <tr><td><a href="https://bgp.he.net/net/154.88.166.0/24" target="_blank" rel="noopener noreferrer">154.88.166.0/24</a></td><td><a href="https://dcg.do/geofeed.csv" target="_blank" rel="noopener noreferrer">DCG geofeed</a></td></tr>
+                <tr><td><a href="https://bgp.he.net/net/154.88.167.0/24" target="_blank" rel="noopener noreferrer">154.88.167.0/24</a></td><td><a href="https://dcg.do/geofeed.csv" target="_blank" rel="noopener noreferrer">DCG geofeed</a></td></tr>
+                <tr><td><a href="https://bgp.he.net/net/154.88.172.0/24" target="_blank" rel="noopener noreferrer">154.88.172.0/24</a></td><td><a href="https://dcg.do/geofeed.csv" target="_blank" rel="noopener noreferrer">DCG geofeed</a></td></tr>
+                <tr><td><a href="https://bgp.he.net/net/154.88.173.0/24" target="_blank" rel="noopener noreferrer">154.88.173.0/24</a></td><td><a href="https://dcg.do/geofeed.csv" target="_blank" rel="noopener noreferrer">DCG geofeed</a></td></tr>
+                <tr><td><a href="https://bgp.he.net/net/154.88.175.0/24" target="_blank" rel="noopener noreferrer">154.88.175.0/24</a></td><td><a href="https://dcg.do/geofeed.csv" target="_blank" rel="noopener noreferrer">DCG geofeed</a></td></tr>
+                <tr><td><a href="https://bgp.he.net/net/154.88.176.0/22" target="_blank" rel="noopener noreferrer">154.88.176.0/22</a></td><td>Cloud Innovation Ltd; parent range</td></tr>
+                <tr><td><a href="https://bgp.he.net/net/154.88.176.0/24" target="_blank" rel="noopener noreferrer">154.88.176.0/24</a></td><td><a href="https://dcg.do/geofeed.csv" target="_blank" rel="noopener noreferrer">DCG geofeed</a></td></tr>
+            </tbody>
+        </table>
+
+        <h2>Why attribution requires care</h2>
+
+        <p>An address can be registered to one organization, originated by an autonomous system, routed through an upstream carrier, assigned by a downstream ISP, and terminate on equipment at a subscriber site. Those facts answer different questions.</p>
+
+        <p>The routing data connects AS271988 and AS64126, but it does not identify who installed or currently administers each exposed terminal. Likewise, a company name in a prefix description is not proof that the company owns the device responding at an address inside that prefix.</p>
 
         <h2>Why this matters</h2>
 
-        <p>A router&rsquo;s administrative interface can control far more than its Wi-Fi name. Depending on the device and account privileges, access may allow changes to network settings, DNS, remote management, or other services. Exposing that interface to the internet gives anyone who finds it a place to try logging in. Keeping a default password on it makes that risk immediate.</p>
+        <p>An administrative interface can control much more than a Wi-Fi name. Depending on the account and device configuration, access may allow changes to DNS, WAN settings, remote management, or other services. A public login page creates exposure. A working default administrative password turns that exposure into confirmed access.</p>
 
-        <p>Telnet adds another concern. It is an old management protocol that offers little reason to be available on the public internet today, especially when a safer, restricted management path can be used.</p>
+        <p>Telnet adds another avoidable problem. Even where I did not confirm a login, an internet-facing Telnet service deserves review. Providers should determine whether it is needed and restrict it to a trusted management network.</p>
 
-        <p>None of this requires a new defensive invention. Providers can give each device a unique credential, restrict management access to trusted networks, disable services they do not need, keep firmware current, and audit what is reachable from outside. Those steps are familiar. Applying them consistently across a large deployment is the hard part.</p>
+        <p>The fixes are familiar:</p>
 
-        <h2>The bigger picture</h2>
+        <ul>
+            <li>assign a unique administrative credential during provisioning;</li>
+            <li>prevent management interfaces from listening on the public WAN;</li>
+            <li>restrict administration to trusted management networks or a VPN;</li>
+            <li>disable Telnet and other unused legacy services;</li>
+            <li>keep firmware current;</li>
+            <li>audit externally reachable equipment continuously; and</li>
+            <li>verify that factory credentials no longer work before a device enters service.</li>
+        </ul>
 
-        <p>INDOTEL is the Dominican Republic&rsquo;s telecommunications regulator, not the operator of the devices discussed here. Its role is to regulate and supervise the sector. <a href="https://indotel.gob.do/wp-content/uploads/2024/11/Especificaciones-tecnicas.pdf" target="_blank" rel="noopener noreferrer">INDOTEL describes that role in its published materials</a>. Findings like these are ultimately a matter for the relevant operators to investigate and fix, with secure deployment practices treated as part of providing connectivity.</p>
+        <p>INDOTEL regulates and supervises the Dominican Republic&rsquo;s telecommunications sector; it does not operate the equipment described here. <a href="https://indotel.gob.do/wp-content/uploads/2024/11/Especificaciones-tecnicas.pdf" target="_blank" rel="noopener noreferrer">INDOTEL&rsquo;s published materials describe that role</a>. The relevant network operators are in the best position to validate affected devices, identify the provisioning path, and close the exposure.</p>
 
-        <p>I&rsquo;ve left live device addresses, serial numbers, and login details out of this article. They are unnecessary to explain the finding.</p>
+        <h2>Conclusion</h2>
 
-        <p>The point is straightforward: I confirmed default credential access on multiple internet-facing Huawei devices in the networks examined. The full scope still needs investigation by the people responsible for those deployments. A single forgotten password is easy to dismiss as an oversight. Seeing the same oversight more than once is a reason to check the process that put the devices online.</p>
+        <p>The scans do not show that every responding router is vulnerable, and the login tests do not establish the total number of affected subscribers. They do show repeated internet-facing management services and confirmed default-credential access on multiple Huawei terminals in the sampled ranges.</p>
 
-        <p>Sometimes the front door really is just open.</p>
+        <p>One forgotten password is a device problem. The same mistake appearing across multiple devices is a reason to inspect the deployment process. Sometimes the front door really is just open.</p>
+
+        <blockquote>
+            Publication note: Recheck the exposure and document operator notification or response before publishing. Keep the live host list, serial numbers, screenshots, and exact host-to-credential mappings in a private disclosure package for the affected operators.
+        </blockquote>
 
         <h1>HAPPY HACKING!</h1>
     </div>
