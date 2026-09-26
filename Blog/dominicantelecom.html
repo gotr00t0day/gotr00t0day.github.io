@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wide Open: The Default Credential Problem Hiding in Dominican Telecom Networks - gotr00t Security Blog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/theme.css">
+    <link rel="stylesheet" href="../assets/css/article.css">
+</head>
+
+<body>
+    <nav class="nav-header">
+        <div class="nav-container">
+            <ul class="nav-links">
+                <li><a href="../index.html" class="nav-link"><i class="fas fa-home"></i>Home</a></li>
+                <li><a href="../poc.html" class="nav-link"><i class="fas fa-bug"></i>PoC</a></li>
+                <li><a href="../projects.html" class="nav-link"><i class="fas fa-code"></i>Projects</a></li>
+                <li><a href="../guides.html" class="nav-link"><i class="fas fa-book"></i>Guides</a></li>
+                <li><a href="../blog.html" class="nav-link active"><i class="fas fa-pen-nib"></i>Blog</a></li>
+                <li><a href="../contact.html" class="nav-link"><i class="fas fa-envelope"></i>Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="terminal-prompt">gotr00t@blog:~$ cat ./research/dominican-telecom.md</div>
+
+        <h1>Wide Open: The Default Credential Problem Hiding in Dominican Telecom Networks</h1>
+
+        <p>I went looking at internet facing telecom equipment in the Dominican Republic and kept running into the same problem: router management pages reachable from the public internet, with some still accepting default administrative credentials.</p>
+
+        <p>There was no clever exploit involved. In several cases, the password had simply never been changed.</p>
+
+        <h2>What I found</h2>
+
+        <p>During research on two network ranges in September 2026, I found numerous devices exposing web management interfaces. Some also exposed Telnet. The equipment appeared to include Huawei EG8141A5 and HG8546M optical network terminals, alongside ZTE F660 devices.</p>
+
+        <p>An open port alone does not mean a device can be accessed. I checked a subset of the devices and confirmed default credential access on multiple Huawei units. The ZTE devices I tested did <strong>not</strong> accept the credentials I tried, and I did not test every device. That distinction matters: the scan showed exposure; the successful logins established the credential problem on the devices I checked.</p>
+
+        <p>The repeated Huawei findings suggest a provisioning issue worth investigating. They do not, by themselves, establish how many subscribers are affected or who configured each device.</p>
+
+        <h2>Why the network labels need care</h2>
+
+        <p>The routing picture is more complicated than a company name beside an IP address. Public routing data shows <strong>AS64126</strong> connected to <strong>AS271988</strong>, the network associated with ISRAEL DE LOS SANTOS WIFI SRL. <a href="https://bgp.he.net/AS271988" target="_blank" rel="noopener noreferrer">Hurricane Electric&rsquo;s AS271988 routing page</a> lists that relationship.</p>
+
+        <p>But an upstream connection does not make the two operators the same company, and an address registered to a carrier does not prove that the carrier owns the router using it. A customer device, a downstream ISP, and an upstream provider can all appear in the same trail of records. Internet attribution: somehow less tidy than the cables behind your desk.</p>
+
+        <p>That is why I&rsquo;m describing the affected <em>devices and observed access</em>, rather than assigning every exposed router to a particular company.</p>
+
+        <h2>Why this matters</h2>
+
+        <p>A router&rsquo;s administrative interface can control far more than its Wi-Fi name. Depending on the device and account privileges, access may allow changes to network settings, DNS, remote management, or other services. Exposing that interface to the internet gives anyone who finds it a place to try logging in. Keeping a default password on it makes that risk immediate.</p>
+
+        <p>Telnet adds another concern. It is an old management protocol that offers little reason to be available on the public internet today, especially when a safer, restricted management path can be used.</p>
+
+        <p>None of this requires a new defensive invention. Providers can give each device a unique credential, restrict management access to trusted networks, disable services they do not need, keep firmware current, and audit what is reachable from outside. Those steps are familiar. Applying them consistently across a large deployment is the hard part.</p>
+
+        <h2>The bigger picture</h2>
+
+        <p>INDOTEL is the Dominican Republic&rsquo;s telecommunications regulator, not the operator of the devices discussed here. Its role is to regulate and supervise the sector. <a href="https://indotel.gob.do/wp-content/uploads/2024/11/Especificaciones-tecnicas.pdf" target="_blank" rel="noopener noreferrer">INDOTEL describes that role in its published materials</a>. Findings like these are ultimately a matter for the relevant operators to investigate and fix, with secure deployment practices treated as part of providing connectivity.</p>
+
+        <p>I&rsquo;ve left live device addresses, serial numbers, and login details out of this article. They are unnecessary to explain the finding.</p>
+
+        <p>The point is straightforward: I confirmed default credential access on multiple internet-facing Huawei devices in the networks examined. The full scope still needs investigation by the people responsible for those deployments. A single forgotten password is easy to dismiss as an oversight. Seeing the same oversight more than once is a reason to check the process that put the devices online.</p>
+
+        <p>Sometimes the front door really is just open.</p>
+
+        <h1>HAPPY HACKING!</h1>
+    </div>
+
+</body>
+</html>
