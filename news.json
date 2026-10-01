@@ -3,8 +3,8 @@
     "date": "2026-10-1",
     "tag": "Release",
     "title": "FortiOS / FortiProxy Authentication Bypass PoC",
-    "body": "We've pwned enough Fortinet boxes that keeping all the fun to ourselves started feeling selfish. So here you go—enjoy the exploit, and try not to set the whole perimeter on fire. 😈",
-    "url": "https://gotr00t0day.github.io/Blog/dominicantelecom.html"
+    "body": "We've pwned enough Fortinet boxes that keeping all the fun to ourselves started feeling selfish. So here you go, enjoy the exploit, and try not to set the whole perimeter on fire. 😈",
+    "url": "https://github.com/gotr00t0day/CVE-2024-55591"
   },
   {
     "date": "2026-09-26",
