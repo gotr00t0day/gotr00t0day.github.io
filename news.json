@@ -1,5 +1,12 @@
 [
   {
+    "date": "2026-10-3",
+    "tag": "Release",
+    "title": "Fortinet FortiSandbox OS Command Injection",
+    "body": "We keep bullying firewalls like they talked shit on IRC. Another CVE drops and suddenly “military grade security” turns into a capture the flag challenge.",
+    "url": "https://github.com/gotr00t0day/CVE-2026-39808"
+  },
+  {
     "date": "2026-10-1",
     "tag": "Release",
     "title": "FortiOS / FortiProxy Authentication Bypass PoC",
