@@ -287,7 +287,8 @@ h1, h2, h3 {
 .cve-card,
 .blog-card,
 .contact-card,
-.guide-card {
+.guide-card,
+.project-card {
     position: relative;
     background: var(--surface);
     border: 1px solid var(--border);
@@ -302,7 +303,8 @@ h1, h2, h3 {
 .cve-card::before,
 .blog-card::before,
 .contact-card::before,
-.guide-card::before {
+.guide-card::before,
+.project-card::before {
     content: "";
     position: absolute;
     inset: 0 auto 0 0;
@@ -316,7 +318,8 @@ h1, h2, h3 {
 .cve-card:hover,
 .blog-card:hover,
 .contact-card:hover,
-.guide-card:hover {
+.guide-card:hover,
+.project-card:hover {
     border-color: var(--border-strong);
     transform: translateY(-4px);
     box-shadow: var(--shadow);
@@ -325,7 +328,8 @@ h1, h2, h3 {
 .cve-card:hover::before,
 .blog-card:hover::before,
 .contact-card:hover::before,
-.guide-card:hover::before { opacity: 1; }
+.guide-card:hover::before,
+.project-card:hover::before { opacity: 1; }
 
 /* ---------- Shared page scaffolding (top-nav pages) ---------- */
 
