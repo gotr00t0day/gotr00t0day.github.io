@@ -102,6 +102,40 @@
 
 
     <div class="cve-grid">
+        <!-- CVE-2026-21589 -->
+        <div class="cve-card">
+            <div class="impact-badge">HIGH</div>
+            <div class="cve-header">
+                <div class="cve-id">CVE-2026-21589</div>
+                <div class="severity-badge high">High</div>
+            </div>
+            <div class="cve-title">Atlassian Jira / Confluence / Bitbucket Path Traversal</div>
+            <div class="cve-description">
+                Unauthenticated path traversal leading to arbitrary file read across Atlassian Jira, Confluence, and Bitbucket. Remote attackers read arbitrary server files via crafted double-colon (<code>::</code>) sequences in resource download URLs, exposing files such as <code>WEB-INF/web.xml</code> and Confluence's <code>crowd.properties</code>, which can contain SSO credentials.
+            </div>
+            <div class="cve-meta">
+                <div class="meta-item">
+                    <div class="meta-label">Year</div>
+                    <div class="meta-value">2026</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Type</div>
+                    <div class="meta-value">Path Traversal</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Impact</div>
+                    <div class="meta-value">High</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Repo</div>
+                    <div class="meta-value">CVE-2026-21589</div>
+                </div>
+            </div>
+            <div class="cve-links">
+                <a href="https://github.com/gotr00t0day/CVE-2026-21589" target="_blank" class="cve-link">🔗 PoC Repository</a>
+            </div>
+        </div>
+
         <!-- CVE-2026-39808 -->
         <div class="cve-card">
             <div class="impact-badge">CRITICAL</div>

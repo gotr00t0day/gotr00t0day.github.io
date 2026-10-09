@@ -1,5 +1,12 @@
 [
   {
+    "date": "2026-10-9",
+    "tag": "Release",
+    "title": "Atlassian Arbitrary File Read",
+    "body": "We’re at it again! Another exploit dropped, another vulnerability exposed, and sysadmins sweating bullets while we keep cooking in the shadows. No rest for the wicked. LULZ.",
+    "url": "https://github.com/gotr00t0day/CVE-2026-21589"
+  },
+  {
     "date": "2026-10-3",
     "tag": "Release",
     "title": "Fortinet FortiSandbox OS Command Injection",
